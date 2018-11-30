@@ -1,6 +1,7 @@
 /**
  * <h1>Package</h1> Represents a package
  */
+
 public class Package {
     private String id;
     private String product;
@@ -8,121 +9,99 @@ public class Package {
     private double price;
     private ShippingAddress destination;
 
-    /**
-     * Default Constructor
-     */
-    //============================================================================
-    //TODO
-    
-    //============================================================================
-    /**
-     * Constructor
-     * 
-     * @param id          id number of product
-     * @param product     name of product in package
-     * @param weight      weight of package
-     * @param price       price of product
-     * @param destination the destination of the package
-     * 
-     */
-    //============================================================================
-    //TODO
-    
-    //============================================================================
+    public Package () {
+        this.id = "";
+        this.product = "";
+        this.weight = 0;
+        this.price = 0;
+        this.destination = new ShippingAddress();
+    }
+
+    public Package (String id, String product, double weight, double price, ShippingAddress destination) {
+        this.id = id; //id number of product
+        this.product = product; //name of product
+        this.weight = weight; //weight of package
+        this.price = price; //price of product
+        this.destination = destination; //destination of package
+    }
+
 
     /**
      * @return id of package
      */
     public String getID() {
-    	//TODO
-    	
-    	}
-    
-    
+        return this.id;
+    }
     
     /**
      * @return Name of product in package
      */
     public String getProduct() {
-    	//TODO   
+    	return this.product;
     }
-    
-    
-    
 
     /**
      * @param product the product name to set
      */
     public void setProduct(String product) {
-    	//TODO
+    	this.product = product;
     }
-
-    
-    
     
     /**
      * @return price of product in package
      */
     public double getPrice() {
-    	//TODO
+    	return this.price;
     }
-
-    
-    
     
     /**
      * @param price the price to set
      */
     public void setPrice(double price) {
-    	//TODO
+    	this.price = price;
     }
-
-    
-    
     
     /**
      * @return Package weight
      */
     public double getWeight() {
-    	//TODO
+    	return this.weight;
     }
 
-    
-    
-    
     /**
      * @param weight the weight to set
      */
     public void setWeight(double weight) {
-    	//TODO
+    	this.weight = weight;
     }
-
-    
     
     /**
      * @return The shipping address of package
      */
     public ShippingAddress getDestination() {
-    	//TODO
+    	return this.destination;
     }
-
-    
-    
     
     /**
      * @param destination the shipping address to set
      */
     public void setDestination(ShippingAddress destination) {
-    	//TODO
+        this.destination = destination;
     }
-
-    
     
     /**
      * @return The package's shipping label.
      */
     public String shippingLabel() {
-    	//TODO
-    }
+    	String dash = "====================";
 
+    	String label = (dash + "\n" + "TO: " + destination.getName() + "\n" +
+                destination.getAddress() + "\n" +
+                destination.getCity() + ", " + destination.getState() + ", " + destination.getZipCode() +
+                "Weight: " + "\t" + "\t" + this.weight + "\n" +
+                "Price: " + "\t" + "\t" + this.price + "\n" +
+                "Product:" + this.product + dash);
+
+    	return label;
+    }
 }
