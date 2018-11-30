@@ -4,21 +4,26 @@ import java.util.ArrayList;
  * <h1>Vehicle</h1> Represents a vehicle
  */
 
+
 public class Vehicle implements Profitable {
     private String licensePlate;
     private double maxWeight;
     private double currentWeight;
     private int zipDest;
     private ArrayList<Package> packages;
+    private int maxRange; //added this field variable
 
 
     /**
      * Default Constructor
      */
-    //============================================================================
-    //TODO
-    
-    //============================================================================
+    public Vehicle () {
+        this.licensePlate = "";
+        this.maxWeight = 0;
+        this.currentWeight = 0;
+        this.zipDest = 0;
+        packages = new ArrayList<Package>();
+    }
 
 
     /**
@@ -27,10 +32,14 @@ public class Vehicle implements Profitable {
      * @param licensePlate license plate of vehicle
      * @param maxWeight    maximum weight of vehicle
      */
-    //============================================================================
-    //TODO
-    
-    //============================================================================
+
+
+    int range = 0;
+
+    public Vehicle (String licensePlate, double maxWeight) {
+        this.licensePlate = licensePlate;
+        this.maxWeight = maxWeight;
+    }
 
     
     /**
@@ -39,12 +48,9 @@ public class Vehicle implements Profitable {
      * @return license plate of this vehicle
      */
     public String getLicensePlate() {
-        //TODO
+        return this.licensePlate;
     }
 
-    
-    
-    
     
     /**
      * Updates the license plate of vehicle
@@ -52,13 +58,8 @@ public class Vehicle implements Profitable {
      * @param licensePlate license plate to be updated to
      */
     public void setLicensePlate(String licensePlate) {
-        //TODO
+        this.licensePlate = licensePlate;
     }
-    
-    
-    
-    
-    
     
 
     /**
@@ -67,12 +68,8 @@ public class Vehicle implements Profitable {
      * @return the maximum weight that this vehicle can carry
      */
     public double getMaxWeight() {
-        //TODO  
+        return this.maxWeight;
     }
-
-    
-    
-    
     
     /**
      * Updates the maximum weight of this vehicle
@@ -80,13 +77,9 @@ public class Vehicle implements Profitable {
      * @param maxWeight max weight to be updated to
      */
     public void setMaxWeight(double maxWeight) {
-        //TODO
+        this.maxWeight = maxWeight;
     }
 
-    
-    
-    
-    
     
     /**
      * Returns the current weight of all packages inside vehicle
@@ -94,13 +87,8 @@ public class Vehicle implements Profitable {
      * @return current weight of all packages inside vehicle
      */
     public double getCurrentWeight() {
-        //TODO
+        return this.currentWeight;
     }
-    
-    
-    
-    
-    
 
     /**
      * Returns the current ZIP code desitnation of the vehicle
@@ -108,13 +96,9 @@ public class Vehicle implements Profitable {
      * @return current ZIP code destination of vehicle
      */
     public int getZipDest() {
-        //TODO 
+        return this.zipDest;
     }
-    
-    
-    
-    
-    
+
 
     /**
      * Updates the ZIP code destination of vehicle
@@ -122,12 +106,8 @@ public class Vehicle implements Profitable {
      * @param zipDest ZIP code destination to be updated to
      */
     public void setZipDest(int zipDest) {
-        //TODO
+        this.zipDest = zipDest;
     }
-
-    
-    
-    
     
     
     /**
@@ -136,13 +116,9 @@ public class Vehicle implements Profitable {
      * @return ArrayList of packages in vehicle
      */
     public ArrayList<Package> getPackages() {
-        //TODO
+        return this.packages;
     }
 
-    
-    
-    
-    
     
     /**
      * Adds Package to the vehicle only if has room to carry it (adding it would not
@@ -152,25 +128,23 @@ public class Vehicle implements Profitable {
      * @return whether or not it was successful in adding the package
      */
     public boolean addPackage(Package pkg) {
-        //TODO
+        if (this.currentWeight <= this.maxWeight) {
+            packages.add(pkg);
+            this.currentWeight = this.currentWeight + pkg.getWeight();
+
+            return true;
+        }
+        return false;
     }
 
-    
-    
-    
-    
     
     /**
      * Clears vehicle of packages and resets its weight to zero
      */
     public void empty() {
-        //TODO
+        packages.clear();
+        this.currentWeight = 0;
     }
-    
-    
-    
-    
-    
 
     /**
      * Returns true if the Vehicle has reached its maximum weight load, false
@@ -179,12 +153,11 @@ public class Vehicle implements Profitable {
      * @return whether or not Vehicle is full
      */
     public boolean isFull() {
-        //TODO
+        if (this.currentWeight >= this.maxWeight) {
+            return true;
+        }
+        return false;
     }
-
-    
-    
-    
     
     
     /**
@@ -197,12 +170,45 @@ public class Vehicle implements Profitable {
      * 
      * @param warehousePackages List of packages to add from
      */
+
+
     public void fill(ArrayList<Package> warehousePackages) {
-        //TODO
+        this.maxRange = 0;
+
+        while (!isFull() && warehousePackages.size() != 0) {
+            for (int i = 0; i <warehousePackages.size(); i++) {
+                int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
+                if (((difference == range))) {
+                    addPackage(warehousePackages.get(i));
+                    System.out.println("The package was added"); //need this??
+                    warehousePackages.remove(i);
+                    maxRange = range;
+                }
+                i = i - 1;
+            }
+
+            range = range + 1; //since it's in an arraylist, you need to do this because the size decreases
+        }
     }
 
-    
 
+    @Override
+    public double getProfit() {
+        double total = 0.0;
+        for (int i = 0; i <packages.size() ; i++) {
+            total = total + packages.get(i).getPrice();
+        }
+        return total;
+    }
+
+    @Override
+    public String report() {
+        return "";
+    }
+
+    //public getMaxRange
+
+    // getMaxRange --> go through packages....and subtract like fill.... but set the highest one to that one
 
 
 }
