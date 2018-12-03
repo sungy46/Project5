@@ -4,7 +4,6 @@
  * Used to locally save and retrieve data.
  * <p>
  * NOTE TO SELF: CREATE TEMPORARY VARIABLES TO STORE VEHICLE TYPE, LICENSE PLATE, WEIGHT, ADDRESS INFO
- * AND CLOSE EVERY FILE
  */
 
 import java.io.*;
@@ -29,6 +28,9 @@ public class DatabaseManager {
         //TODO
         ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
         String[] vehicleParameters;
+        String type;
+        String license;
+        double weight;
         if (!file.exists()) {
             return vehicles;
         } else {
@@ -39,7 +41,10 @@ public class DatabaseManager {
                 String str = br.readLine();
                 while (str != null) {
                     vehicleParameters = str.split(",");
-                    vehicles.add(new Vehicle(vehicleParameters[0], Double.parseDouble(vehicleParameters[1]), Double.parseDouble(vehicleParameters[2])));
+                    type = vehicleParameters[0];
+                    license = vehicleParameters[1];
+                    weight = Double.parseDouble(vehicleParameters[2]);
+                    vehicles.add(new Vehicle(license, weight));
                     str = br.readLine();
                 }
                 br.close();
@@ -195,13 +200,22 @@ public class DatabaseManager {
      */
     public static void saveVehicles(File file, ArrayList<Vehicle> vehicles) {
         //TODO
+        String type = "";
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
 
             for (int i = 0; i < vehicles.size(); i++) {
                 // How do you get the vehicle type?
-                bw.write(vehicles.get(i).getType(), vehicles.get(i).getLicensePlate(), vehicles.get(i).getMaxWeight());
+                if (vehicles.get(i) instanceof CargoPlane) {
+                    type = "Cargo Plane";
+                } else if (vehicles.get(i) instanceof Drone) {
+                    type = "Drone";
+                } else if (vehicles.get(i) instanceof Truck) {
+                    type = "Truck";
+                }
+
+                bw.write(type + ", " + vehicles.get(i).getLicensePlate() + ", " + vehicles.get(i).getMaxWeight());
                 bw.write("\n");
             }
             bw.close();
