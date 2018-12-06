@@ -28,7 +28,6 @@ public class DatabaseManager {
         //TODO
         ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
         String[] vehicleParameters;
-        String type;
         String license;
         double weight;
         if (!file.exists()) {
@@ -41,7 +40,6 @@ public class DatabaseManager {
                 String str = br.readLine();
                 while (str != null) {
                     vehicleParameters = str.split(",");
-                    type = vehicleParameters[0];
                     license = vehicleParameters[1];
                     weight = Double.parseDouble(vehicleParameters[2]);
                     vehicles.add(new Vehicle(license, weight));
