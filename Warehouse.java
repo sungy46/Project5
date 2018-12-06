@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -25,6 +24,7 @@ public class Warehouse {
     private static int nPackagesShipped;
     private static boolean primeday;
     private static Scanner console = new Scanner(System.in);
+    private static String id;
 
     /**
      * Main Method
@@ -75,7 +75,7 @@ public class Warehouse {
                         if (vehicles.size() == 0) {
                             System.out.println("Error: No vehicles available.");
                             break;
-                        } else if (packages.size() - nPackagesShipped == 0) {
+                        } else if (packages.size() == 0) {
                             System.out.println("Error: No packages available.");
                             break;
                         } else {
@@ -149,13 +149,17 @@ public class Warehouse {
                                 }
                                 vehicles.get(vehicleIndex).setZipDest(zip);
                                 vehicles.get(vehicleIndex).fill(packages);
+
+                                System.out.println(id + " has been added.");
+                                vehicles.get(vehicleIndex).report();
+                                packages.get(packages.size() - 1).shippingLabel();
                                 vehicles.remove(vehicleIndex);
                             }
                         }
                     break;
                 case 5: // how do you get number of packages in warehouse?
                     printStatisticsReport(profits, nPackagesShipped,
-                            packages.size() - nPackagesShipped);
+                            packages.size());
                     break;
                 case 6:
                     a = false;
@@ -178,7 +182,6 @@ public class Warehouse {
     }
 
     public static void addPackages() {
-        String id;
         String product;
         double weight;
         double price;
@@ -221,6 +224,7 @@ public class Warehouse {
 
         System.out.println();
         System.out.println(temp.shippingLabel());
+        System.out.println();
     }
 
     public static void addVehicle() {
