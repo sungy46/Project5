@@ -19,7 +19,7 @@ public class Warehouse {
     final static File PRIME_DAY_FILE = new File(folderPath + "PrimeDay.txt");
     final static double PRIME_DAY_DISCOUNT = .85;
     private static ArrayList<Vehicle> vehicles;
-    private static ArrayList<Package> packages;
+    public static ArrayList<Package> packages;
     private static double profits;
     private static int nPackagesShipped;
     private static boolean primeday;
@@ -151,8 +151,8 @@ public class Warehouse {
                                 vehicles.get(vehicleIndex).fill(packages);
 
                                 System.out.println(id + " has been added.");
-                                vehicles.get(vehicleIndex).report();
-                                packages.get(packages.size() - 1).shippingLabel();
+                                System.out.println(vehicles.get(vehicleIndex).report());
+                                System.out.println(packages.get(packages.size() - 1).shippingLabel());
                                 vehicles.remove(vehicleIndex);
                             }
                         }
