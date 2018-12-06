@@ -9,7 +9,7 @@ public class Package {
     private double price;
     private ShippingAddress destination;
 
-    public Package () {
+    public Package () { //default constructor
         this.id = "";
         this.product = "";
         this.weight = 0;
@@ -85,7 +85,7 @@ public class Package {
     /**
      * @param destination the shipping address to set
      */
-    public void setDestination(ShippingAddress destination) {
+    public void setDestination (ShippingAddress destination) {
         this.destination = destination;
     }
     
@@ -99,8 +99,8 @@ public class Package {
                 destination.getAddress() + "\n" +
                 destination.getCity() + ", " + destination.getState() + ", " + destination.getZipCode() +
                 "Weight: " + "\t" + "\t" + this.weight + "\n" +
-                "Price: " + "\t" + "\t" + this.price + "\n" +
-                "Product:" + this.product + dash);
+                "Price: " + "\t" + "\t" + "$" + this.price + "\n" +
+                "Product:" + this.product + "\n" + dash);
 
     	return label;
     }
