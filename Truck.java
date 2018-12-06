@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 /**
  * <h1>Truck</h1> Represents a Truck
+ * @author Yolanda Sung, Haoyi Ding, lab 814
+ * @version December 5, 2018
  */
 
 public class Truck extends Vehicle {
@@ -19,19 +21,19 @@ public class Truck extends Vehicle {
      * Default Constructor
      */
 
-    public Truck () { //check
-        super ();
+    public Truck() { //check
+        super();
     }
 
     /**
      * Constructor
-     * 
+     *
      * @param licensePlate license plate of vehicle
      * @param maxWeight    maximum weight that the vehicle can hold
      */
 
-    public Truck (String licensePlate, double maxWeight) {
-        super (licensePlate, maxWeight);
+    public Truck(String licensePlate, double maxWeight) {
+        super(licensePlate, maxWeight);
     }
 
 
@@ -63,7 +65,7 @@ public class Truck extends Vehicle {
         this.zipDest = zipDest;
     }
 
-    public ArrayList <Package> getPackages() {
+    public ArrayList<Package> getPackages() {
         return this.packages;
     }
 
@@ -80,11 +82,11 @@ public class Truck extends Vehicle {
         double priceOfPackage = 0.0;
 
 
-        for (int i = 0; i <packages.size(); i++) {
+        for (int i = 0; i < packages.size(); i++) {
             priceOfPackage = packages.get(i).getPrice();
             profit = profit + ((priceOfPackage) - (getMaxRange() * GAS_RATE));
         }
-    	return profit;
+        return profit;
     }
 
     public boolean addPackage(Package pkg) {
@@ -105,11 +107,14 @@ public class Truck extends Vehicle {
 
     public void fill(ArrayList<Package> warehousePackages) {
 
-        while (!isFull() && warehousePackages.size() != 0) { //if the vehicle isn't full and if there are still packages in the warehouse
-            for (int i = 0; i <warehousePackages.size(); i++) { //go through the items in the warehouse
+        //if the vehicle isn't full and if there are still packages in the warehouse
+        while (!isFull() && warehousePackages.size() != 0) {
+            for (int i = 0; i < warehousePackages.size(); i++) { //go through the items in the warehouse
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
-                //line above is getting the closest zip code first...comparing the this zip code with the package's zip code
-                if (((difference == range))) { //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
+                //line above is getting the closest zip code first...
+                // comparing the this zip code with the package's zip code
+                //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
+                if (((difference == range))) {
                     addPackage(warehousePackages.get(i)); //adds the package into the vehicle
                     System.out.println("The package was added"); //Kelly said that we needed this :) Do we though??
                     warehousePackages.remove(i); //removes the package from the warehouse
@@ -136,7 +141,7 @@ public class Truck extends Vehicle {
      * <li>Net Profit</li>
      * <li>Shipping labels of all packages in truck</li>
      * </ul>
-     * 
+     *
      * @return Truck Report
      */
     @Override
@@ -145,18 +150,18 @@ public class Truck extends Vehicle {
 
         /////truck report
 
-    	String truck = "==========Truck Report==========";
-    	String license = "License Plate No.: " + this.licensePlate;
-    	String destination = "Destination: " + getZipDest();
-    	String weightLoad = "Weight load: " + getCurrentWeight() / getMaxWeight();
-    	String netProfit = "Net Profit: " + getProfit();
-    	String shippingLabels = "=====Shipping Labels=====";
-    	String dash = "====================";
+        String truck = "==========Truck Report==========";
+        String license = "License Plate No.: " + this.licensePlate;
+        String destination = "Destination: " + getZipDest();
+        String weightLoad = "Weight load: " + getCurrentWeight() / getMaxWeight();
+        String netProfit = "Net Profit: " + getProfit();
+        String shippingLabels = "=====Shipping Labels=====";
+        String dash = "====================";
 
 
-    	///////shipping labels
+        ///////shipping labels
 
-        for (int i = 0; i <packages.size(); i++) {
+        for (int i = 0; i < packages.size(); i++) {
             endResult += dash + "\n" + packages.get(i).toString() + "\n" + dash + "\n";
         }
 

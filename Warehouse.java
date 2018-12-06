@@ -1,10 +1,11 @@
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * <h1>Warehouse</h1>
+ * @author Yolanda Sung, Haoyi Ding, lab 814
+ * @version December 5, 2018
  */
 
 public class Warehouse {
@@ -14,7 +15,7 @@ public class Warehouse {
     final static File PROFIT_FILE = new File(folderPath + "Profit.txt");
     final static File N_PACKAGES_FILE = new File(folderPath + "NumberOfPackages.txt");
     final static File PRIME_DAY_FILE = new File(folderPath + "PrimeDay.txt");
-    final static double PRIME_DAY_DISCOUNT = .15;
+    final static double PRIME_DAY_DISCOUNT = .85;
     private static ArrayList<Vehicle> vehicles;
     private static ArrayList<Package> packages;
     private static double profits;
@@ -66,15 +67,27 @@ public class Warehouse {
                 case 3:
                     primeday = !primeday;
                     break;
-                case 4:
-                    if ()
-
-
+                case 4: // how do you check if vehicle is full?
+                    break;
+                case 5: // how do you get number of packages in warehouse?
+                    printStatisticsReport(profits, nPackagesShipped,
+                            packages.size() - nPackagesShipped);
+                    break;
+                case 6:
+                    break;
             }
+
+            break;
         }
 
 
-        //3) save data (vehicle, packages, profits, packages shipped and primeday) to files (overwriting them) using DatabaseManager
+        //3) save data (vehicle, packages, profits, packages shipped and primeday)
+        // to files (overwriting them) using DatabaseManager
+        DatabaseManager.saveVehicles(VEHICLE_FILE, vehicles);
+        DatabaseManager.savePackages(N_PACKAGES_FILE, packages);
+        DatabaseManager.saveProfit(PROFIT_FILE, profits);
+        DatabaseManager.savePackagesShipped(PACKAGE_FILE, nPackagesShipped);
+        DatabaseManager.savePrimeDay(PRIME_DAY_FILE, primeday);
 
 
     }
@@ -114,8 +127,13 @@ public class Warehouse {
         console.nextLine();
 
         destination = new ShippingAddress(buyerName, address, city, state, zip);
+        if (primeday) {
+            price *= PRIME_DAY_DISCOUNT;
+        }
         Package temp = new Package(id, product, weight, price, destination);
         packages.add(temp);
+        nPackagesShipped++;
+
 
         System.out.println();
         temp.shippingLabel();
@@ -143,6 +161,14 @@ public class Warehouse {
         } else if (type == 3) {
             vehicles.add(new CargoPlane(licensePlate, maxWeight));
         }
+    }
+
+    public static void printStatisticsReport(double profits, int packagesShipped, int numberOfPackages) {
+        System.out.println("==========Statistics==========");
+        System.out.printf("Profits: " + "%16.2f\n", profits);
+        System.out.printf("Packages Shipped: " + "%16d\n", packagesShipped);
+        System.out.printf("Packages in Warehouse: " + "%16d\n", numberOfPackages);
+        System.out.println("==============================");
     }
 
 

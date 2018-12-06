@@ -3,7 +3,10 @@
  * <p>
  * Used to locally save and retrieve data.
  * <p>
- * NOTE TO SELF: CREATE TEMPORARY VARIABLES TO STORE VEHICLE TYPE, LICENSE PLATE, WEIGHT, ADDRESS INFO
+ *
+ * @author Yolanda Sung, Haoyi Ding, lab 814
+ * @version December 5, 2018
+ *
  */
 
 import java.io.*;
@@ -25,7 +28,6 @@ public class DatabaseManager {
      * @return ArrayList of vehicles
      */
     public static ArrayList<Vehicle> loadVehicles(File file) {
-        //TODO
         ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
         String[] vehicleParameters;
         String license;
@@ -71,14 +73,13 @@ public class DatabaseManager {
      * <li>State</li>
      * <li>ZIP Code</li>
      * </ol>
-     *
+     * <p>
      * If filePath does not exist, a blank ArrayList will be returned.
      *
      * @param file CSV File
      * @return ArrayList of packages
      */
     public static ArrayList<Package> loadPackages(File file) {
-        //TODO
         ArrayList<Package> packages = new ArrayList<Package>();
         String[] packageParameters;
         if (!file.exists()) {
@@ -92,8 +93,9 @@ public class DatabaseManager {
                 while (str != null) {
                     packageParameters = str.split(",");
                     ShippingAddress sa = new ShippingAddress(packageParameters[4], packageParameters[5],
-                            packageParameters[6], packageParameters[7], packageParameters[8]);
-                    packages.add(new Package(packageParameters[0], packageParameters[1], Double.parseDouble(packageParameters[2]), Double.parseDouble(packageParameters[3]), sa));
+                            packageParameters[6], packageParameters[7], Integer.parseInt(packageParameters[8]));
+                    packages.add(new Package(packageParameters[0], packageParameters[1],
+                            Double.parseDouble(packageParameters[2]), Double.parseDouble(packageParameters[3]), sa));
                     str = br.readLine();
                 }
                 br.close();
@@ -116,7 +118,6 @@ public class DatabaseManager {
      * @return profits from file
      */
     public static double loadProfit(File file) {
-        //TODO
         Double profit = 0.0;
         if (!file.exists()) {
             return 0;
@@ -143,7 +144,6 @@ public class DatabaseManager {
      * @return number of packages shipped from file
      */
     public static int loadPackagesShipped(File file) { //Which file is it? NumberOfPackages.txt?
-        //TODO
         int packages = 0;
         if (file.exists()) {
             try {
@@ -168,14 +168,14 @@ public class DatabaseManager {
      * @return whether or not it is prime day
      */
     public static boolean loadPrimeDay(File file) {
-        //TODO
         if (file.exists()) {
             try {
                 FileReader fr = new FileReader(file);
                 BufferedReader br = new BufferedReader(fr);
+                String prime = br.readLine();
                 br.close();
                 fr.close();
-                return br.readLine().equals("1");
+                return prime.equals("1");
             } catch (IOException e) {
                 System.out.println("Exception " + e + " was caught");
             }
@@ -197,7 +197,6 @@ public class DatabaseManager {
      * @param vehicles ArrayList of vehicles to save to file
      */
     public static void saveVehicles(File file, ArrayList<Vehicle> vehicles) {
-        //TODO
         String type = "";
         try {
             FileWriter fw = new FileWriter(file);
@@ -213,7 +212,7 @@ public class DatabaseManager {
                     type = "Truck";
                 }
 
-                bw.write(type + ", " + vehicles.get(i).getLicensePlate() + ", " + vehicles.get(i).getMaxWeight());
+                bw.write(type + "," + vehicles.get(i).getLicensePlate() + "," + vehicles.get(i).getMaxWeight());
                 bw.write("\n");
             }
             bw.close();
@@ -244,13 +243,12 @@ public class DatabaseManager {
      * @param packages ArrayList of packages to save to file
      */
     public static void savePackages(File file, ArrayList<Package> packages) {
-        //TODO
         String id;
         String productName;
         double weight;
         double price;
         String addressName;
-        String address;
+        String state;
         String city;
         int zip;
 
@@ -263,12 +261,14 @@ public class DatabaseManager {
                 productName = packages.get(i).getProduct();
                 weight = packages.get(i).getWeight();
                 price = packages.get(i).getPrice();
-                addressName = packages.get(i).getAddressName();
-                address = packages.get(i).getDestination().toString(); // CHECK!
+                addressName = packages.get(i).getDestination().getAddress();
+                //address = packages.get(i).getDestination().toString(); // CHECK!
                 city = packages.get(i).getDestination().getCity();
-                zip = packages.get(i).getDestination().getZip();
+                state = packages.get(i).getDestination().getState();
+                zip = packages.get(i).getDestination().getZipCode();
 
-                bw.write(id + ", " + productName + ", " + weight + ", " + price + ", " + addressName + ", " + address + ", " + city + ", " + zip);
+                bw.write(id + "," + productName + "," + weight + "," + price + "," + addressName + "," +
+                        "," + city + "," + state + "," + zip);
                 bw.write("\n");
             }
             bw.close();
@@ -288,7 +288,6 @@ public class DatabaseManager {
 
     // Do we have to check if file exists?
     public static void saveProfit(File file, double profit) {
-        //TODO
         try {
             FileWriter fw = new FileWriter(file, false); // Overwrites file
             BufferedWriter bw = new BufferedWriter(fw);
@@ -309,7 +308,6 @@ public class DatabaseManager {
      */
 
     public static void savePackagesShipped(File file, int nPackages) {
-        //TODO
         try {
             FileWriter fw = new FileWriter(file, false); // Overwrites file
             BufferedWriter bw = new BufferedWriter(fw);
@@ -331,14 +329,13 @@ public class DatabaseManager {
      */
 
     public static void savePrimeDay(File file, boolean primeDay) {
-        //TODO
         try {
             FileWriter fw = new FileWriter(file, false); // Overwrites file
             BufferedWriter bw = new BufferedWriter(fw);
             if (primeDay) {
-                bw.write(1);
+                bw.write("1");
             } else {
-                bw.write(0);
+                bw.write("0");
             }
             bw.close();
             fw.close();

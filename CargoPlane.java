@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 /**
  * <h1>CargoPlane</h1> Represents a Cargo Plane
+ * @author Yolanda Sung, Haoyi Ding, lab 814
+ * @version December 5, 2018
  */
 public class CargoPlane extends Vehicle {
 
@@ -10,15 +12,15 @@ public class CargoPlane extends Vehicle {
     private double maxWeight;
     private double currentWeight;
     private int zipDest;
-    private ArrayList <Package> packages;
+    private ArrayList<Package> packages;
     final double GAS_RATE = 2.33;
     private int maxRange;
 
     /**
      * Default Constructor
      */
-    public CargoPlane () {
-        super ();
+    public CargoPlane() {
+        super();
     }
 
     /**
@@ -28,8 +30,8 @@ public class CargoPlane extends Vehicle {
      * @param maxWeight    maximum weight that the vehicle can hold
      */
 
-    public CargoPlane (String licensePlate, double maxWeight) {
-        super (licensePlate, maxWeight);
+    public CargoPlane(String licensePlate, double maxWeight) {
+        super(licensePlate, maxWeight);
     }
 
 
@@ -61,7 +63,7 @@ public class CargoPlane extends Vehicle {
         this.zipDest = zipDest;
     }
 
-    public ArrayList <Package> getPackages() {
+    public ArrayList<Package> getPackages() {
         return this.packages;
     }
 
@@ -91,11 +93,14 @@ public class CargoPlane extends Vehicle {
      */
     @Override
     public void fill(ArrayList<Package> warehousePackages) {
-        while (!isFull() && warehousePackages.size() != 0) { //if the vehicle isn't full and if there are still packages in the warehouse
-            for (int i = 0; i <warehousePackages.size(); i++) { //go through the items in the warehouse
+        //if the vehicle isn't full and if there are still packages in the warehouse
+        while (!isFull() && warehousePackages.size() != 0) {
+            for (int i = 0; i < warehousePackages.size(); i++) { //go through the items in the warehouse
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
-                //line above is getting the closest zip code first...comparing the this zip code with the package's zip code
-                if (((difference == range))) { //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
+                //line above is getting the closest zip code first...
+                // comparing the this zip code with the package's zip code
+                //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
+                if (((difference == range))) {
                     addPackage(warehousePackages.get(i)); //adds the package into the vehicle
                     System.out.println("The package was added"); //Kelly said that we needed this :) Do we though??
                     warehousePackages.remove(i); //removes the package from the warehouse
@@ -107,14 +112,13 @@ public class CargoPlane extends Vehicle {
             range = range + 10; //since it's in an arraylist, you need to do this because the size decreases
 
         }
-        
+
     }
 
 
     public int getMaxRange() {
         return this.maxRange;
     }
-
 
 
     /**
@@ -128,9 +132,9 @@ public class CargoPlane extends Vehicle {
         double profit = 0.0;
         double priceOfPackage = 0.0;
 
-        for (int i = 0; i <packages.size() ; i++) {
+        for (int i = 0; i < packages.size(); i++) {
             priceOfPackage = packages.get(i).getPrice();
-            profit = profit + ((priceOfPackage)- (getMaxRange() * GAS_RATE));
+            profit = profit + ((priceOfPackage) - (getMaxRange() * GAS_RATE));
         }
         return profit;
     }
@@ -164,7 +168,7 @@ public class CargoPlane extends Vehicle {
 
         ///////shipping labels
 
-        for (int i = 0; i <packages.size(); i++) {
+        for (int i = 0; i < packages.size(); i++) {
             endResult += dash + "\n" + packages.get(i).toString() + "\n" + dash + "\n";
         }
 
