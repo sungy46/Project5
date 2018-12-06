@@ -9,7 +9,7 @@ public class Vehicle implements Profitable {
     private String licensePlate;
     private double maxWeight;
     private double currentWeight;
-    private int zipDest;
+    private int zipDest; //zip code of the destination
     private ArrayList<Package> packages;
     private int maxRange; //added this field variable
 
@@ -17,6 +17,7 @@ public class Vehicle implements Profitable {
     /**
      * Default Constructor
      */
+
     public Vehicle () {
         this.licensePlate = "";
         this.maxWeight = 0;
@@ -34,7 +35,8 @@ public class Vehicle implements Profitable {
      */
 
 
-    int range = 0;
+    int range = 0; //range of the vehicle...has to do with fill method
+
 
     public Vehicle (String licensePlate, double maxWeight) {
         this.licensePlate = licensePlate;
@@ -51,7 +53,6 @@ public class Vehicle implements Profitable {
         return this.licensePlate;
     }
 
-    
     /**
      * Updates the license plate of vehicle
      * 
@@ -79,7 +80,6 @@ public class Vehicle implements Profitable {
     public void setMaxWeight(double maxWeight) {
         this.maxWeight = maxWeight;
     }
-
     
     /**
      * Returns the current weight of all packages inside vehicle
@@ -99,7 +99,6 @@ public class Vehicle implements Profitable {
         return this.zipDest;
     }
 
-
     /**
      * Updates the ZIP code destination of vehicle
      * 
@@ -109,13 +108,12 @@ public class Vehicle implements Profitable {
         this.zipDest = zipDest;
     }
     
-    
     /**
      * Returns ArrayList of packages currently in Vehicle
      * 
      * @return ArrayList of packages in vehicle
      */
-    public ArrayList<Package> getPackages() {
+    public ArrayList <Package> getPackages() {
         return this.packages;
     }
 
@@ -130,8 +128,7 @@ public class Vehicle implements Profitable {
     public boolean addPackage(Package pkg) {
         if (this.currentWeight <= this.maxWeight) {
             packages.add(pkg);
-            this.currentWeight = this.currentWeight + pkg.getWeight();
-
+            this.currentWeight = this.currentWeight + pkg.getWeight(); //add weight of pkg to current weight
             return true;
         }
         return false;
@@ -141,6 +138,7 @@ public class Vehicle implements Profitable {
     /**
      * Clears vehicle of packages and resets its weight to zero
      */
+
     public void empty() {
         packages.clear();
         this.currentWeight = 0;
@@ -152,13 +150,13 @@ public class Vehicle implements Profitable {
      * 
      * @return whether or not Vehicle is full
      */
+
     public boolean isFull() {
-        if (this.currentWeight >= this.maxWeight) {
+        if (this.currentWeight >= this.maxWeight) { //equal to because if it's the max weight, you can't put more pkg
             return true;
         }
         return false;
     }
-    
     
     /**
      * Fills vehicle with packages with preference of date added and range of its
@@ -175,19 +173,22 @@ public class Vehicle implements Profitable {
     public void fill(ArrayList<Package> warehousePackages) {
         this.maxRange = 0;
 
-        while (!isFull() && warehousePackages.size() != 0) {
-            for (int i = 0; i < warehousePackages.size(); i++) {
+        while (!isFull() && warehousePackages.size() != 0) { //if the vehicle isn't full and if there are still packages in the warehouse
+            for (int i = 0; i <warehousePackages.size(); i++) { //go through the items in the warehouse
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
-                if (((difference == range))) {
-                    addPackage(warehousePackages.get(i));
-                    System.out.println("The package was added"); //need this??
-                    warehousePackages.remove(i);
-                    maxRange = range;
+                //line above is getting the closest zip code first...comparing the this zip code with the package's zip code
+                if (((difference == range))) { //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
+                    addPackage(warehousePackages.get(i)); //adds the package into the vehicle
+                    System.out.println("The package was added"); //Kelly said that we needed this :) Do we though??
+                    warehousePackages.remove(i); //removes the package from the warehouse
+                    maxRange = range; //the max range is the farthest the vehicle delivers
                 }
-                i = i - 1;
+          //      i = i - 1; ...don't remember what this was for
             }
 
             range = range + 1; //since it's in an arraylist, you need to do this because the size decreases
+
+            //RANGE FOR PLANE IS DIFFERENT!
         }
     }
 
@@ -202,11 +203,16 @@ public class Vehicle implements Profitable {
     }
 
     @Override
-    public String report() {
+    public String report() { //leave it blank because it will be overridden
         return "";
     }
 
-    //public getMaxRange
+    public int getMaxRange() {
+        for (int i = 0; i <packages.size() ; i++) {
+
+        }
+    }
+
 
     // getMaxRange --> go through packages....and subtract like fill.... but set the highest one to that one
 
