@@ -1,7 +1,8 @@
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * <h1>Package</h1> Represents a package
- * @author Yolanda Sung, Haoyi Ding, lab 814
- * @version December 5, 2018
  */
 
 public class Package {
@@ -11,7 +12,7 @@ public class Package {
     private double price;
     private ShippingAddress destination;
 
-    public Package() { //default constructor
+    public Package () { //default constructor
         this.id = "";
         this.product = "";
         this.weight = 0;
@@ -19,7 +20,7 @@ public class Package {
         this.destination = new ShippingAddress();
     }
 
-    public Package(String id, String product, double weight, double price, ShippingAddress destination) {
+    public Package (String id, String product, double weight, double price, ShippingAddress destination) {
         this.id = id; //id number of product
         this.product = product; //name of product
         this.weight = weight; //weight of package
@@ -34,76 +35,80 @@ public class Package {
     public String getID() {
         return this.id;
     }
-
+    
     /**
      * @return Name of product in package
      */
     public String getProduct() {
-        return this.product;
+    	return this.product;
     }
 
     /**
      * @param product the product name to set
      */
     public void setProduct(String product) {
-        this.product = product;
+    	this.product = product;
     }
-
+    
     /**
      * @return price of product in package
      */
     public double getPrice() {
-        return this.price;
+    	return this.price;
     }
-
+    
     /**
      * @param price the price to set
      */
     public void setPrice(double price) {
-        this.price = price;
+    	this.price = price;
     }
-
+    
     /**
      * @return Package weight
      */
     public double getWeight() {
-        return this.weight;
+    	return this.weight;
     }
 
     /**
      * @param weight the weight to set
      */
     public void setWeight(double weight) {
-        this.weight = weight;
+    	this.weight = weight;
     }
-
+    
     /**
      * @return The shipping address of package
      */
     public ShippingAddress getDestination() {
-        return this.destination;
+    	return this.destination;
     }
-
+    
     /**
      * @param destination the shipping address to set
      */
-    public void setDestination(ShippingAddress destination) {
+    public void setDestination (ShippingAddress destination) {
         this.destination = destination;
     }
-
+    
     /**
      * @return The package's shipping label.
      */
-    public String shippingLabel() {
-        String dash = "====================";
 
-        String label = (dash + "\n" + "TO: " + destination.getName() + "\n" +
+    public String shippingLabel() {
+    	String dash = "====================";
+    	NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
+    	String price = nf.format(this.price);
+    	String weight = String.format("%.2f", this.weight);
+
+    	String label = (dash + "\n" + "TO: " + destination.getName() + "\n" +
                 destination.getAddress() + "\n" +
-                destination.getCity() + ", " + destination.getState() + ", " + destination.getZipCode() +
-                "Weight: " + "\t" + "\t" + this.weight + "\n" +
-                "Price: " + "\t" + "\t" + "$" + this.price + "\n" +
+                destination.getCity() + ", " + destination.getState() + ", " + destination.getZipCode() + "\n" +
+                "Weight: " + "\t" + "\t" + weight + "\n" +
+                "Price: " + "\t" + "\t" + price + "\n" +
                 "Product:" + this.product + "\n" + dash);
 
-        return label;
+    	return label;
     }
 }
