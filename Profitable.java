@@ -4,9 +4,9 @@
  * This interface represents something that can be used to make a profit. Along
  * with returning total profits it must also be able to provide a report.
  */
-public interface Profitable {
+public interface Profitable { //nothing inside the methods because they'll be overridden
 	
-	double getProfit ();
-	String report ();
+	public double getProfit ();
+	public String report ();
 
 }
