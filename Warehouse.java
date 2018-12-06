@@ -134,7 +134,6 @@ public class Warehouse {
         packages.add(temp);
         nPackagesShipped++;
 
-
         System.out.println();
         temp.shippingLabel();
     }
