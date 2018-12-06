@@ -1,4 +1,6 @@
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * <h1>Drone</h1> Represents a Drone
@@ -113,6 +115,10 @@ public class Drone extends Vehicle {
      * &sum;p<sub>price</sub> - (range<sub>max</sub> &times; 1.33)
      * </p>
      */
+
+    NumberFormat nf = NumberFormat.getInstance(Locale.US);
+
+
     @Override
     public double getProfit() {
     	double profit = 0.0;
@@ -120,7 +126,7 @@ public class Drone extends Vehicle {
 
         for (int i = 0; i <packages.size() ; i++) {
             priceOfPackage = packages.get(i).getPrice();
-            profit = profit + ((priceOfPackage)- (getMaxRange() * GAS_RATE));
+            profit = Double.parseDouble(nf.format(profit + ((priceOfPackage)- (getMaxRange() * GAS_RATE))));
         }
     	return profit;
     }
@@ -140,14 +146,17 @@ public class Drone extends Vehicle {
     @Override
     public String report() {
         String endResult = "";
+        NumberFormat nf = NumberFormat.getInstance(Locale.US);
+        String netProf = nf.format(getProfit());
+
 
         /////drone report
 
         String drone = "==========Drone Report==========";
         String license = "License Plate No.: " + this.licensePlate;
         String destination = "Destination: " + getZipDest();
-        String weightLoad = "Weight load: " + getCurrentWeight() / getMaxWeight();
-        String netProfit = "Net Profit: " + getProfit();
+        String weightLoad = String.format("Weight load: %.2f", getCurrentWeight() / getMaxWeight());
+        String netProfit = "Net Profit: $%.2f" + netProf;
         String shippingLabels = "=====Shipping Labels=====";
         String dash = "====================";
 
