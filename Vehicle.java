@@ -176,7 +176,7 @@ public class Vehicle implements Profitable {
         this.maxRange = 0;
 
         while (!isFull() && warehousePackages.size() != 0) {
-            for (int i = 0; i <warehousePackages.size(); i++) {
+            for (int i = 0; i < warehousePackages.size(); i++) {
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
                 if (((difference == range))) {
                     addPackage(warehousePackages.get(i));

@@ -15,11 +15,11 @@ public class Warehouse {
     final static File N_PACKAGES_FILE = new File(folderPath + "NumberOfPackages.txt");
     final static File PRIME_DAY_FILE = new File(folderPath + "PrimeDay.txt");
     final static double PRIME_DAY_DISCOUNT = .15;
-    private static ArrayList<Vehicle> vehicles = DatabaseManager.loadVehicles(VEHICLE_FILE);
-    private static ArrayList<Package> packages = DatabaseManager.loadPackages(PACKAGE_FILE);
-    private static double profits = DatabaseManager.loadProfit(PROFIT_FILE);
-    private static int nPackagesShipped = DatabaseManager.loadPackagesShipped(N_PACKAGES_FILE);
-    private static boolean primeday = DatabaseManager.loadPrimeDay(PRIME_DAY_FILE);
+    private static ArrayList<Vehicle> vehicles;
+    private static ArrayList<Package> packages;
+    private static double profits;
+    private static int nPackagesShipped;
+    private static boolean primeday;
     private static Scanner console = new Scanner(System.in);
 
     /**
@@ -31,7 +31,11 @@ public class Warehouse {
         //TODO
 
         //1) load data (vehicle, packages, profits, packages shipped and primeday) from files using DatabaseManager
-
+        vehicles = DatabaseManager.loadVehicles(VEHICLE_FILE);
+        packages = DatabaseManager.loadPackages(PACKAGE_FILE);
+        profits = DatabaseManager.loadProfit(PROFIT_FILE);
+        nPackagesShipped = DatabaseManager.loadPackagesShipped(N_PACKAGES_FILE);
+        primeday = DatabaseManager.loadPrimeDay(PRIME_DAY_FILE);
 
         //2) Show menu and handle user inputs
         while (true) {
