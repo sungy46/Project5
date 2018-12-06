@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -9,7 +10,9 @@ import java.util.Scanner;
  */
 
 public class Warehouse {
-    final static String folderPath = "files/";
+    //final static String folderPath = "files/";
+    final static String folderPath = "";
+
     final static File VEHICLE_FILE = new File(folderPath + "VehicleList.csv");
     final static File PACKAGE_FILE = new File(folderPath + "PackageList.csv");
     final static File PROFIT_FILE = new File(folderPath + "Profit.txt");
@@ -29,7 +32,7 @@ public class Warehouse {
      * @param args list of command line arguements
      */
     public static void main(String[] args) {
-        //TODO
+        boolean a = true;
 
         //1) load data (vehicle, packages, profits, packages shipped and primeday) from files using DatabaseManager
         vehicles = DatabaseManager.loadVehicles(VEHICLE_FILE);
@@ -39,7 +42,7 @@ public class Warehouse {
         primeday = DatabaseManager.loadPrimeDay(PRIME_DAY_FILE);
 
         //2) Show menu and handle user inputs
-        while (true) {
+        while (a) {
             System.out.println("==========Options==========");
             System.out.println("1) Add Package");
             System.out.println("2) Add Vehicle");
@@ -56,6 +59,7 @@ public class Warehouse {
             System.out.println("===========================");
 
             int input = console.nextInt();  //user selected option
+            console.nextLine();
 
             switch (input) {
                 case 1:
@@ -68,25 +72,106 @@ public class Warehouse {
                     primeday = !primeday;
                     break;
                 case 4: // how do you check if vehicle is full?
+                        if (vehicles.size() == 0) {
+                            System.out.println("Error: No vehicles available.");
+                            break;
+                        } else if (packages.size() - nPackagesShipped == 0) {
+                            System.out.println("Error: No packages available.");
+                            break;
+                        } else {
+                            System.out.println("Options:");
+                            System.out.println("1) Send Truck");
+                            System.out.println("2) Send Drone");
+                            System.out.println("3) Send Cargo Plane");
+                            System.out.println("4) Send First Available");
+
+                            int transportMode = console.nextInt();
+                            console.nextLine();
+                            boolean vehicleFound = false;
+                            int vehicleIndex = -1;
+
+                            if (transportMode == 1) {
+                                for (int i = 0; i < vehicles.size(); i++) {
+                                    if (vehicles.get(i) instanceof Truck) {
+                                        vehicleIndex = i;
+                                        //vehicles.remove(i);
+                                        vehicleFound = true;
+                                        break; //breaks out of for loop
+                                    }
+                                }
+                                if (!vehicleFound) {
+                                    System.out.println("Error: No vehicles of selected type are available.");
+                                }
+                            } else if (transportMode == 2) {
+                                for (int i = 0; i < vehicles.size(); i++) {
+                                    if (vehicles.get(i) instanceof Drone) {
+                                        vehicleFound = true;
+                                        vehicleIndex = i;
+                                        break; //breaks out of for loop
+                                    }
+                                }
+                                if (!vehicleFound) {
+                                    System.out.println("Error: No vehicles of selected type are available.");
+                                }
+                            } else if (transportMode == 3) {
+                                for (int i = 0; i < vehicles.size(); i++) {
+                                    if (vehicles.get(i) instanceof CargoPlane) {
+                                        //vehicles.remove(i);
+                                        vehicleIndex = i;
+                                        vehicleFound = true;
+                                        break; //breaks out of for loop
+                                    }
+                                }
+                                if (!vehicleFound) {
+                                    System.out.println("Error: No vehicles of selected type are available.");
+                                }
+                            } else if (transportMode == 4) {
+                                //vehicles.remove(0);
+                                vehicleIndex = 0;
+                            } else {
+                                System.out.println("The option selected is not valid.");
+                                break;
+                            }
+
+                            if (vehicleFound) {
+                                System.out.println("ZIP Code Options:");
+                                System.out.println("1) Send to first ZIP Code");
+                                System.out.println("2) Send to mode of ZIP Codes");
+
+                                int zipOption = console.nextInt();
+                                console.nextLine();
+                                int zip = -1;
+
+                                if (zipOption == 1) {
+                                    zip = packages.get(0).getDestination().getZipCode();
+                                } else if (zipOption == 2) {
+                                    zip = zipMode(packages);
+                                }
+                                vehicles.get(vehicleIndex).setZipDest(zip);
+                                vehicles.get(vehicleIndex).fill(packages);
+                                vehicles.remove(vehicleIndex);
+                            }
+                        }
                     break;
                 case 5: // how do you get number of packages in warehouse?
                     printStatisticsReport(profits, nPackagesShipped,
                             packages.size() - nPackagesShipped);
                     break;
                 case 6:
+                    a = false;
                     break;
             }
 
-            break;
+            //break;
         }
 
 
         //3) save data (vehicle, packages, profits, packages shipped and primeday)
         // to files (overwriting them) using DatabaseManager
         DatabaseManager.saveVehicles(VEHICLE_FILE, vehicles);
-        DatabaseManager.savePackages(N_PACKAGES_FILE, packages);
+        DatabaseManager.savePackages(PACKAGE_FILE, packages);
         DatabaseManager.saveProfit(PROFIT_FILE, profits);
-        DatabaseManager.savePackagesShipped(PACKAGE_FILE, nPackagesShipped);
+        DatabaseManager.savePackagesShipped(N_PACKAGES_FILE, nPackagesShipped);
         DatabaseManager.savePrimeDay(PRIME_DAY_FILE, primeday);
 
 
@@ -135,7 +220,7 @@ public class Warehouse {
         nPackagesShipped++;
 
         System.out.println();
-        temp.shippingLabel();
+        System.out.println(temp.shippingLabel());
     }
 
     public static void addVehicle() {
@@ -160,6 +245,33 @@ public class Warehouse {
         } else if (type == 3) {
             vehicles.add(new CargoPlane(licensePlate, maxWeight));
         }
+    }
+
+    public static int zipMode(ArrayList<Package> packages) {
+        int[] mode = new int[packages.size()];
+        int count = 0;
+
+        for (int i = 0; i < packages.size(); i++) {
+            for (int a = 0; a < packages.size(); a++) {
+                if (a != i) {
+                    if (packages.get(i).equals(packages.get(a))) {
+                        count++;
+                    }
+                }
+            }
+            mode[i] = count;
+            count = 0;
+        }
+        int max = mode[0];
+        int index = 0;
+        for (int b = 1; b < mode.length; b++) {
+            if (max < mode[b]) {
+                max = mode[b];
+                index = b;
+            }
+        }
+
+        return packages.get(index).getDestination().getZipCode();
     }
 
     public static void printStatisticsReport(double profits, int packagesShipped, int numberOfPackages) {
