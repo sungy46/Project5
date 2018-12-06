@@ -171,7 +171,6 @@ public class Vehicle implements Profitable {
 
 
     public void fill(ArrayList<Package> warehousePackages) {
-        this.maxRange = 0;
 
         while (!isFull() && warehousePackages.size() != 0) { //if the vehicle isn't full and if there are still packages in the warehouse
             for (int i = 0; i <warehousePackages.size(); i++) { //go through the items in the warehouse
@@ -188,7 +187,6 @@ public class Vehicle implements Profitable {
 
             range = range + 1; //since it's in an arraylist, you need to do this because the size decreases
 
-            //RANGE FOR PLANE IS DIFFERENT!
         }
     }
 
@@ -208,13 +206,10 @@ public class Vehicle implements Profitable {
     }
 
     public int getMaxRange() {
-        for (int i = 0; i <packages.size() ; i++) {
-
-        }
+        return this.maxRange;
     }
 
 
-    // getMaxRange --> go through packages....and subtract like fill.... but set the highest one to that one
-
-
+    // getMaxRange --> go through packages....
+    // and subtract like fill.... but set the highest one to that one
 }
