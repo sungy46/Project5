@@ -37,7 +37,7 @@ public class Vehicle implements Profitable {
      */
 
 
-    int range = 0; //range of the vehicle...has to do with fill method
+     //range of the vehicle...has to do with fill method
 
 
     public Vehicle (String licensePlate, double maxWeight) {
@@ -173,7 +173,7 @@ public class Vehicle implements Profitable {
 
 
     public void fill(ArrayList<Package> warehousePackages) {
-
+        int range = 0;
         while (!isFull() && warehousePackages.size() != 0) { //if the vehicle isn't full and if there are still packages in the warehouse
             for (int i = 0; i <warehousePackages.size(); i++) { //go through the items in the warehouse
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());

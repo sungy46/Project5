@@ -31,8 +31,9 @@ public class Drone extends Vehicle {
      * @param maxWeight    maximum weight that the vehicle can hold
      */
 
-    public Drone (String licensePlate, double maxWeight) {
+    public Drone (String licensePlate, double maxWeight, double currentWeight) {
        super (licensePlate, maxWeight);
+       this.currentWeight = currentWeight;
     }
 
     public String getLicensePlate() {
@@ -85,7 +86,7 @@ public class Drone extends Vehicle {
     }
 
     public void fill(ArrayList<Package> warehousePackages) {
-
+        int range = 0;
         while (!isFull() && warehousePackages.size() != 0) {
             for (int i = 0; i <warehousePackages.size(); i++) {
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
@@ -94,8 +95,9 @@ public class Drone extends Vehicle {
                     addPackage(warehousePackages.get(i));
                     warehousePackages.remove(i);
                     maxRange = range;
-                }
                     i = i - 1;
+                }
+
             }
 
             range = range + 1; //since it's in an arraylist, you need to do this because the size decreases
@@ -149,9 +151,9 @@ public class Drone extends Vehicle {
         /////drone report
 
         String drone = "==========Drone Report==========";
-        String license = "License Plate No.: " + this.licensePlate;
+        String license = "License Plate No.: " + super.getLicensePlate();
         String destination = "Destination: " + getZipDest();
-        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", getCurrentWeight(), getMaxWeight());
+        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", getCurrentWeight(), super.getMaxWeight());
         String netProfit = "Net Profit: " + nf.format(getProfit());
         String shippingLabels = "=====Shipping Labels=====";
         String dash = "====================";

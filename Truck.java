@@ -32,8 +32,9 @@ public class Truck extends Vehicle {
      * @param maxWeight    maximum weight that the vehicle can hold
      */
 
-    public Truck (String licensePlate, double maxWeight) {
+    public Truck (String licensePlate, double maxWeight, double currentWeight) {
         super (licensePlate, maxWeight);
+        this.currentWeight = currentWeight;
     }
 
 
@@ -46,7 +47,7 @@ public class Truck extends Vehicle {
     }
 
     public double getMaxWeight() {
-        return this.maxWeight;
+        return super.getMaxWeight();
     }
 
     public void setMaxWeight(double maxWeight) {
@@ -86,9 +87,11 @@ public class Truck extends Vehicle {
 
         for (int i = 0; i < packages.size(); i++) {
             priceOfPackage = packages.get(i).getPrice();
-
-            profit = (profit + ((priceOfPackage) - (getMaxRange() * GAS_RATE)));
+            profit += priceOfPackage;
         }
+
+        profit -= (getMaxRange() * GAS_RATE);
+
         return profit;
     }
 
@@ -102,24 +105,26 @@ public class Truck extends Vehicle {
     }
 
     public boolean isFull() {
-        if (this.currentWeight >= this.maxWeight) { //equal to because if it's the max weight, you can't put more pkg
+        if (this.currentWeight >= this.getMaxWeight()) { //equal to because if it's the max weight, you can't put more pkg
             return true;
         }
         return false;
     }
 
     public void fill(ArrayList<Package> warehousePackages) {
-
+        int range =0;
         while (!isFull() && warehousePackages.size() != 0) {
             for (int i = 0; i <warehousePackages.size(); i++) {
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
                 if (((difference == range))) {
-                    addPackage(warehousePackages.get(i));
-                   // System.out.println("The package was added");
-                    warehousePackages.remove(i);
-                    maxRange = range;
+                    if (currentWeight + warehousePackages.get(i).getWeight() <= maxWeight) {
+                        addPackage(warehousePackages.get(i));
+
+                        warehousePackages.remove(i);
+                        maxRange = range;
+                        i = i - 1;
+                    }
                 }
-                      i = i - 1;
             }
 
             range = range + 1;
@@ -150,9 +155,9 @@ public class Truck extends Vehicle {
         /////truck report
 
         String truck = "==========Truck Report==========";
-        String license = "License Plate No.: " + this.licensePlate;
+        String license = "License Plate No.: " + super.getLicensePlate();
         String destination = "Destination: " + getZipDest();
-        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", getCurrentWeight(), getMaxWeight());
+        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", getCurrentWeight(), super.getMaxWeight());
         String netProfit = ("Net Profit: " + nf.format(getProfit()));
         String shippingLabels = "=====Shipping Labels=====";
         String dash = "====================";
