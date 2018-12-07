@@ -31,6 +31,7 @@ public class DatabaseManager {
         ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
         String[] vehicleParameters;
         String license;
+        String type;
         double weight;
         if (!file.exists()) {
             return vehicles;
@@ -42,8 +43,18 @@ public class DatabaseManager {
                 String str = br.readLine();
                 while (str != null) {
                     vehicleParameters = str.split(",");
+                    type = vehicleParameters[0];
                     license = vehicleParameters[1];
                     weight = Double.parseDouble(vehicleParameters[2]);
+
+//                    if (type.equals("Truck")) {
+//                        vehicles.add(new Truck(license, weight));
+//                    } else if (type.equals("Drone")) {
+//                        vehicles.add(new Drone(license, weight));
+//                    } else {
+//                        vehicles.add(new CargoPlane(license, weight));
+//                    }
+
                     vehicles.add(new Vehicle(license, weight));
                     str = br.readLine();
                 }
@@ -135,7 +146,6 @@ public class DatabaseManager {
         return profit;
     }
 
-
     /**
      * Returns the total number of packages shipped stored in the text file. If the
      * file does not exist 0 will be returned.
@@ -143,7 +153,7 @@ public class DatabaseManager {
      * @param file file where number of packages shipped are stored
      * @return number of packages shipped from file
      */
-    public static int loadPackagesShipped(File file) { //Which file is it? NumberOfPackages.txt?
+    public static int loadPackagesShipped(File file) {
         int packages = 0;
         if (file.exists()) {
             try {
@@ -203,7 +213,6 @@ public class DatabaseManager {
             BufferedWriter bw = new BufferedWriter(fw);
 
             for (int i = 0; i < vehicles.size(); i++) {
-                // How do you get the vehicle type?
                 if (vehicles.get(i) instanceof CargoPlane) {
                     type = "Cargo Plane";
                 } else if (vehicles.get(i) instanceof Drone) {
@@ -247,6 +256,7 @@ public class DatabaseManager {
         String productName;
         double weight;
         double price;
+        String name;
         String addressName;
         String state;
         String city;
@@ -261,14 +271,14 @@ public class DatabaseManager {
                 productName = packages.get(i).getProduct();
                 weight = packages.get(i).getWeight();
                 price = packages.get(i).getPrice();
+                name = packages.get(i).getDestination().getName();
                 addressName = packages.get(i).getDestination().getAddress();
-                //address = packages.get(i).getDestination().toString(); // CHECK!
                 city = packages.get(i).getDestination().getCity();
                 state = packages.get(i).getDestination().getState();
                 zip = packages.get(i).getDestination().getZipCode();
 
-                bw.write(id + "," + productName + "," + weight + "," + price + "," + addressName + "," +
-                        "," + city + "," + state + "," + zip);
+                bw.write(id + "," + productName + "," + weight + "," + price + "," + name + "," +
+                        addressName + "," + "," + city + "," + state + "," + zip);
                 bw.write("\n");
             }
             bw.close();
@@ -285,11 +295,9 @@ public class DatabaseManager {
      * @param file   File to write profits to
      * @param profit Total profits
      */
-
-    // Do we have to check if file exists?
     public static void saveProfit(File file, double profit) {
         try {
-            FileWriter fw = new FileWriter(file, false); // Overwrites file
+            FileWriter fw = new FileWriter(file); // Overwrites file
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("" + profit);
             bw.close();
