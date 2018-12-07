@@ -19,12 +19,14 @@ public class Warehouse {
     final static File PRIME_DAY_FILE = new File(folderPath + "PrimeDay.txt");
     final static double PRIME_DAY_DISCOUNT = .85;
     private static ArrayList<Vehicle> vehicles;
-    public static ArrayList<Package> packages;
+    private static ArrayList<Package> packages;
     private static double profits;
     private static int nPackagesShipped;
     private static boolean primeday;
     private static Scanner console = new Scanner(System.in);
     private static String id;
+    private static Package temp;
+    private static double weight;
 
     /**
      * Main Method
@@ -72,90 +74,95 @@ public class Warehouse {
                     primeday = !primeday;
                     break;
                 case 4: // how do you check if vehicle is full?
-                        if (vehicles.size() == 0) {
-                            System.out.println("Error: No vehicles available.");
-                            break;
-                        } else if (packages.size() == 0) {
-                            System.out.println("Error: No packages available.");
-                            break;
+                    if (vehicles.size() == 0) {
+                        System.out.println("Error: No vehicles available.");
+                        break;
+                    } else if (packages.size() == 0) {
+                        System.out.println("Error: No packages available.");
+                        break;
+                    } else {
+                        System.out.println("Options:");
+                        System.out.println("1) Send Truck");
+                        System.out.println("2) Send Drone");
+                        System.out.println("3) Send Cargo Plane");
+                        System.out.println("4) Send First Available");
+
+                        int transportMode = console.nextInt();
+                        console.nextLine();
+                        boolean vehicleFound = false;
+                        int vehicleIndex = -1;
+
+                        if (transportMode == 1) {
+                            for (int i = 0; i < vehicles.size(); i++) {
+                                if (vehicles.get(i) instanceof Truck) {
+                                    vehicleIndex = i;
+                                    //vehicles.remove(i);
+                                    vehicleFound = true;
+                                    vehicles.get(i).addPackage(temp);
+                                    break; //breaks out of for loop
+                                }
+                            }
+                            if (!vehicleFound) {
+                                System.out.println("Error: No vehicles of selected type are available.");
+                            }
+                        } else if (transportMode == 2) {
+                            for (int i = 0; i < vehicles.size(); i++) {
+                                if (vehicles.get(i) instanceof Drone) {
+                                    vehicleFound = true;
+                                    vehicleIndex = i;
+                                    break; //breaks out of for loop
+                                }
+                            }
+                            if (!vehicleFound) {
+                                System.out.println("Error: No vehicles of selected type are available.");
+                            }
+                        } else if (transportMode == 3) {
+                            for (int i = 0; i < vehicles.size(); i++) {
+                                if (vehicles.get(i) instanceof CargoPlane) {
+                                    //vehicles.remove(i);
+                                    vehicleIndex = i;
+                                    vehicleFound = true;
+                                    break; //breaks out of for loop
+                                }
+                            }
+                            if (!vehicleFound) {
+                                System.out.println("Error: No vehicles of selected type are available.");
+                            }
+                        } else if (transportMode == 4) {
+                            //vehicles.remove(0);
+                            vehicleIndex = 0;
                         } else {
-                            System.out.println("Options:");
-                            System.out.println("1) Send Truck");
-                            System.out.println("2) Send Drone");
-                            System.out.println("3) Send Cargo Plane");
-                            System.out.println("4) Send First Available");
-
-                            int transportMode = console.nextInt();
-                            console.nextLine();
-                            boolean vehicleFound = false;
-                            int vehicleIndex = -1;
-
-                            if (transportMode == 1) {
-                                for (int i = 0; i < vehicles.size(); i++) {
-                                    if (vehicles.get(i) instanceof Truck) {
-                                        vehicleIndex = i;
-                                        //vehicles.remove(i);
-                                        vehicleFound = true;
-                                        break; //breaks out of for loop
-                                    }
-                                }
-                                if (!vehicleFound) {
-                                    System.out.println("Error: No vehicles of selected type are available.");
-                                }
-                            } else if (transportMode == 2) {
-                                for (int i = 0; i < vehicles.size(); i++) {
-                                    if (vehicles.get(i) instanceof Drone) {
-                                        vehicleFound = true;
-                                        vehicleIndex = i;
-                                        break; //breaks out of for loop
-                                    }
-                                }
-                                if (!vehicleFound) {
-                                    System.out.println("Error: No vehicles of selected type are available.");
-                                }
-                            } else if (transportMode == 3) {
-                                for (int i = 0; i < vehicles.size(); i++) {
-                                    if (vehicles.get(i) instanceof CargoPlane) {
-                                        //vehicles.remove(i);
-                                        vehicleIndex = i;
-                                        vehicleFound = true;
-                                        break; //breaks out of for loop
-                                    }
-                                }
-                                if (!vehicleFound) {
-                                    System.out.println("Error: No vehicles of selected type are available.");
-                                }
-                            } else if (transportMode == 4) {
-                                //vehicles.remove(0);
-                                vehicleIndex = 0;
-                            } else {
-                                System.out.println("The option selected is not valid.");
-                                break;
-                            }
-
-                            if (vehicleFound) {
-                                System.out.println("ZIP Code Options:");
-                                System.out.println("1) Send to first ZIP Code");
-                                System.out.println("2) Send to mode of ZIP Codes");
-
-                                int zipOption = console.nextInt();
-                                console.nextLine();
-                                int zip = -1;
-
-                                if (zipOption == 1) {
-                                    zip = packages.get(0).getDestination().getZipCode();
-                                } else if (zipOption == 2) {
-                                    zip = zipMode(packages);
-                                }
-                                vehicles.get(vehicleIndex).setZipDest(zip);
-                                vehicles.get(vehicleIndex).fill(packages);
-
-                                System.out.println(id + " has been added.");
-                                System.out.println(vehicles.get(vehicleIndex).report());
-                                System.out.println(packages.get(packages.size() - 1).shippingLabel());
-                                vehicles.remove(vehicleIndex);
-                            }
+                            System.out.println("The option selected is not valid.");
+                            break;
                         }
+
+                        if (vehicleFound) {
+                            System.out.println("ZIP Code Options:");
+                            System.out.println("1) Send to first ZIP Code");
+                            System.out.println("2) Send to mode of ZIP Codes");
+
+                            int zipOption = console.nextInt();
+                            console.nextLine();
+                            int zip = -1;
+
+                            if (zipOption == 1) {
+                                zip = packages.get(0).getDestination().getZipCode();
+                            } else if (zipOption == 2) {
+                                zip = zipMode(packages);
+                            }
+                            vehicles.get(vehicleIndex).setZipDest(zip);
+                            vehicles.get(vehicleIndex).fill(packages);
+
+                            System.out.println(id + " has been added.");
+                            System.out.println(vehicles.get(vehicleIndex).report());
+                            //if (packages.size() == 0) {
+                             //   System.out.println(packages.get(0).shippingLabel());
+                            //} else {
+                                System.out.println(packages.get(packages.size()-1).shippingLabel());
+                            //}
+                            vehicles.remove(vehicleIndex);
+                        }
+                    }
                     break;
                 case 5: // how do you get number of packages in warehouse?
                     printStatisticsReport(profits, nPackagesShipped,
@@ -183,7 +190,7 @@ public class Warehouse {
 
     public static void addPackages() {
         String product;
-        double weight;
+//        double weight;
         double price;
         String buyerName;
         String address;
@@ -218,7 +225,7 @@ public class Warehouse {
         if (primeday) {
             price *= PRIME_DAY_DISCOUNT;
         }
-        Package temp = new Package(id, product, weight, price, destination);
+        temp = new Package(id, product, weight, price, destination);
         packages.add(temp);
         nPackagesShipped++;
 
@@ -243,11 +250,11 @@ public class Warehouse {
         double maxWeight = console.nextDouble();
 
         if (type == 1) {
-            vehicles.add(new Truck(licensePlate, maxWeight));
+            vehicles.add(new Truck(licensePlate, maxWeight, weight));
         } else if (type == 2) {
-            vehicles.add(new Drone(licensePlate, maxWeight));
+            vehicles.add(new Drone(licensePlate, maxWeight, weight));
         } else if (type == 3) {
-            vehicles.add(new CargoPlane(licensePlate, maxWeight));
+            vehicles.add(new CargoPlane(licensePlate, maxWeight, weight));
         }
     }
 
