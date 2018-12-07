@@ -12,7 +12,7 @@ public class CargoPlane extends Vehicle {
     private double maxWeight;
     private double currentWeight;
     private int zipDest;
-    private ArrayList <Package> packages;
+    private ArrayList <Package> packages = new ArrayList<Package>();
     final double GAS_RATE = 2.33;
     private int maxRange;
 
@@ -63,9 +63,9 @@ public class CargoPlane extends Vehicle {
         this.zipDest = zipDest;
     }
 
-    public ArrayList <Package> getPackages() {
-        return this.packages;
-    }
+  //  public ArrayList <Package> getPackages() {
+//        return this.packages;
+//    }
 
 
     public boolean addPackage(Package pkg) {
@@ -93,17 +93,17 @@ public class CargoPlane extends Vehicle {
      */
     @Override
     public void fill(ArrayList<Package> warehousePackages) {
-        while (!isFull() && warehousePackages.size() != 0) { //if the vehicle isn't full and if there are still packages in the warehouse
-            for (int i = 0; i <warehousePackages.size(); i++) { //go through the items in the warehouse
+
+        while (!isFull() && warehousePackages.size() != 0) {
+            for (int i = 0; i <warehousePackages.size(); i++) {
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
-                //line above is getting the closest zip code first...comparing the this zip code with the package's zip code
-                if (((difference == range))) { //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
-                    addPackage(warehousePackages.get(i)); //adds the package into the vehicle
-                    System.out.println("The package was added"); //Kelly said that we needed this :) Do we though??
-                    warehousePackages.remove(i); //removes the package from the warehouse
-                    maxRange = range; //the max range is the farthest the vehicle delivers
+
+                if (((difference == range))) {
+                    addPackage(warehousePackages.get(i));
+                    warehousePackages.remove(i);
+                    maxRange = range;
                 }
-                //      i = i - 1; ...don't remember what this was for
+                      i = i - 1;
             }
 
             range = range + 10; //since it's in an arraylist, you need to do this because the size decreases
@@ -126,7 +126,7 @@ public class CargoPlane extends Vehicle {
      * </p>
      */
 
-    NumberFormat nf = NumberFormat.getInstance(Locale.US);
+    NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
 
     @Override
     public double getProfit() {
@@ -135,7 +135,7 @@ public class CargoPlane extends Vehicle {
 
         for (int i = 0; i <packages.size() ; i++) {
             priceOfPackage = packages.get(i).getPrice();
-            profit = Double.parseDouble(nf.format(profit + ((priceOfPackage)- (getMaxRange() * GAS_RATE))));
+            profit = (profit + ((priceOfPackage)- (getMaxRange() * GAS_RATE)));
         }
         return profit;
     }
@@ -155,16 +155,14 @@ public class CargoPlane extends Vehicle {
     @Override
     public String report() {
         String endResult = "";
-        NumberFormat nf = NumberFormat.getInstance(Locale.US);
-        String netProf = nf.format(getProfit());
 
         /////cargo plane report
 
         String cargoPlane = "==========CargoPlane Report==========";
         String license = "License Plate No.: " + this.licensePlate;
         String destination = "Destination: " + getZipDest();
-        String weightLoad = String.format("Weight load: %.2f", getCurrentWeight() / getMaxWeight());
-        String netProfit = "Net Profit: $%.2f" + netProf;
+        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", getCurrentWeight(), getMaxWeight());
+        String netProfit = "Net Profit: " + nf.format(getProfit());
         String shippingLabels = "=====Shipping Labels=====";
         String dash = "====================";
 
@@ -172,10 +170,10 @@ public class CargoPlane extends Vehicle {
         ///////shipping labels
 
         for (int i = 0; i <packages.size(); i++) {
-            endResult += dash + "\n" + packages.get(i).toString() + "\n" + dash + "\n";
+            endResult += "\n" + packages.get(i).shippingLabel();
         }
 
         return cargoPlane + "\n" + license + "\n" + destination + "\n" + weightLoad + "\n" + netProfit
-                + "\n" + shippingLabels + "\n" + endResult;
+                + "\n" + shippingLabels + endResult;
     }
 }

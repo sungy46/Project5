@@ -105,10 +105,9 @@ public class Package {
     	String label = (dash + "\n" + "TO: " + destination.getName() + "\n" +
                 destination.getAddress() + "\n" +
                 destination.getCity() + ", " + destination.getState() + ", " + destination.getZipCode() + "\n" +
-                "Weight: " + "\t" + "\t" + weight + "\n" +
-                "Price: " + "\t" + "\t" + price + "\n" +
+                "Weight: " + "         " + weight + "\n" +
+                "Price: " + "        " + price + "\n" +
                 "Product:" + this.product + "\n" + dash);
-
     	return label;
     }
 }

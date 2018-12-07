@@ -180,7 +180,7 @@ public class Vehicle implements Profitable {
                 //line above is getting the closest zip code first...comparing the this zip code with the package's zip code
                 if (((difference == range))) { //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
                     addPackage(warehousePackages.get(i)); //adds the package into the vehicle
-                    System.out.println("The package was added"); //Kelly said that we needed this :) Do we though??
+                  //  System.out.println("The package was added"); //Kelly said that we needed this :) Do we though??
                     warehousePackages.remove(i); //removes the package from the warehouse
                     maxRange = range; //the max range is the farthest the vehicle delivers
                 }
@@ -192,7 +192,7 @@ public class Vehicle implements Profitable {
         }
     }
 
-    NumberFormat nf = NumberFormat.getInstance(Locale.US);
+    NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
 
     @Override
     public double getProfit() {
@@ -211,8 +211,4 @@ public class Vehicle implements Profitable {
     public int getMaxRange() {
         return this.maxRange;
     }
-
-
-    // getMaxRange --> go through packages....
-    // and subtract like fill.... but set the highest one to that one
 }
