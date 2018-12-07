@@ -47,15 +47,15 @@ public class DatabaseManager {
                     license = vehicleParameters[1];
                     weight = Double.parseDouble(vehicleParameters[2]);
 
-//                    if (type.equals("Truck")) {
-//                        vehicles.add(new Truck(license, weight));
-//                    } else if (type.equals("Drone")) {
-//                        vehicles.add(new Drone(license, weight));
-//                    } else {
-//                        vehicles.add(new CargoPlane(license, weight));
-//                    }
+                    if (type.equals("Truck")) {
+                        vehicles.add(new Truck(license, weight));
+                    } else if (type.equals("Drone")) {
+                        vehicles.add(new Drone(license, weight));
+                    } else {
+                        vehicles.add(new CargoPlane(license, weight));
+                    }
 
-                    vehicles.add(new Vehicle(license, weight));
+                    //vehicles.add(new Vehicle(license, weight));
                     str = br.readLine();
                 }
                 br.close();

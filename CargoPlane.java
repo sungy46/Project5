@@ -30,9 +30,9 @@ public class CargoPlane extends Vehicle {
      * @param maxWeight    maximum weight that the vehicle can hold
      */
 
-    public CargoPlane (String licensePlate, double maxWeight, double currentWeight) {
+    public CargoPlane (String licensePlate, double maxWeight) {
         super (licensePlate, maxWeight);
-        this.currentWeight = currentWeight;
+        this.currentWeight = 0;
     }
 
 

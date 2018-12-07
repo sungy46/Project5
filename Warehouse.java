@@ -9,8 +9,8 @@ import java.util.Scanner;
  */
 
 public class Warehouse {
-    //final static String folderPath = "files/";
-    final static String folderPath = "";
+    final static String folderPath = "files/";
+    //final static String folderPath = "";
 
     final static File VEHICLE_FILE = new File(folderPath + "VehicleList.csv");
     final static File PACKAGE_FILE = new File(folderPath + "PackageList.csv");
@@ -151,14 +151,15 @@ public class Warehouse {
                                 zip = zipMode(packages);
                             }
                             vehicles.get(vehicleIndex).setZipDest(zip);
+
+                            System.out.println("Packages ArrayList size: " + packages.size());
+
                             vehicles.get(vehicleIndex).fill(packages);
 
                             System.out.println(id + " has been added.");
                             System.out.println(vehicles.get(vehicleIndex).report());
-                            //if (packages.size() == 0) {
-                             //   System.out.println(packages.get(0).shippingLabel());
-                            //} else {
-                                System.out.println(packages.get(packages.size()-1).shippingLabel());
+
+                            System.out.println(packages.get(packages.size()-1).shippingLabel());
                             //}
                             vehicles.remove(vehicleIndex);
                         }
@@ -172,8 +173,6 @@ public class Warehouse {
                     a = false;
                     break;
             }
-
-            //break;
         }
 
 
@@ -184,8 +183,6 @@ public class Warehouse {
         DatabaseManager.saveProfit(PROFIT_FILE, profits);
         DatabaseManager.savePackagesShipped(N_PACKAGES_FILE, nPackagesShipped);
         DatabaseManager.savePrimeDay(PRIME_DAY_FILE, primeday);
-
-
     }
 
     public static void addPackages() {
@@ -250,11 +247,11 @@ public class Warehouse {
         double maxWeight = console.nextDouble();
 
         if (type == 1) {
-            vehicles.add(new Truck(licensePlate, maxWeight, weight));
+            vehicles.add(new Truck(licensePlate, maxWeight));
         } else if (type == 2) {
-            vehicles.add(new Drone(licensePlate, maxWeight, weight));
+            vehicles.add(new Drone(licensePlate, maxWeight));
         } else if (type == 3) {
-            vehicles.add(new CargoPlane(licensePlate, maxWeight, weight));
+            vehicles.add(new CargoPlane(licensePlate, maxWeight));
         }
     }
 
