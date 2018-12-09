@@ -6,7 +6,6 @@
  *
  * @author Yolanda Sung, Haoyi Ding, lab 814
  * @version December 5, 2018
- *
  */
 
 import java.io.*;
@@ -29,43 +28,44 @@ public class DatabaseManager {
      */
     public static ArrayList<Vehicle> loadVehicles(File file) {
         ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
-        String[] vehicleParameters;
-        String license;
-        String type;
-        double weight;
+        String[] vehicleParameters = new String[3];
+        System.out.println("loadVehicles method is called");
+
         if (!file.exists()) {
-            return vehicles;
+            System.out.println("File doesn't exist");
+            return new ArrayList<Vehicle>();
         } else {
             try {
+                System.out.println("File exists!");
                 FileReader fr = new FileReader(file);
                 BufferedReader br = new BufferedReader(fr);
 
-                String str = br.readLine();
-                while (str != null) {
+                String str;
+                while ((str = br.readLine()) != null) {
+                    //System.out.println("Vehicles: " + str);
                     vehicleParameters = str.split(",");
-                    type = vehicleParameters[0];
-                    license = vehicleParameters[1];
-                    weight = Double.parseDouble(vehicleParameters[2]);
+                    //System.out.println("vehicleParameters length: " + vehicleParameters.length);
 
-                    if (type.equals("Truck")) {
-                        vehicles.add(new Truck(license, weight));
-                    } else if (type.equals("Drone")) {
-                        vehicles.add(new Drone(license, weight));
-                    } else {
-                        vehicles.add(new CargoPlane(license, weight));
+                    if (vehicleParameters[0].equals("Truck")) {
+                        vehicles.add(new Truck(vehicleParameters[1], Double.parseDouble(vehicleParameters[2])));
+
+                    } else if (vehicleParameters[0].equals("Drone")) {
+                        vehicles.add(new Drone(vehicleParameters[1], Double.parseDouble(vehicleParameters[2])));
+                    } else if (vehicleParameters[0].equals("Cargo Plane")) {
+                        vehicles.add(new CargoPlane(vehicleParameters[1], Double.parseDouble(vehicleParameters[2])));
                     }
+                    //System.out.println("MaxWeight: " + vehicles.get(vehicles.size() - 1).getMaxWeight());
 
-                    //vehicles.add(new Vehicle(license, weight));
-                    str = br.readLine();
                 }
                 br.close();
                 fr.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                //System.out.println(vehicles);
+                return vehicles;
             } catch (IOException e) {
-                e.printStackTrace();
+                return new ArrayList<Vehicle>();
+                //e.printStackTrace();
             }
-            return vehicles;
+
         }
     }
 
@@ -102,19 +102,37 @@ public class DatabaseManager {
 
                 String str = br.readLine();
                 while (str != null) {
-                    packageParameters = str.split(",");
-                    ShippingAddress sa = new ShippingAddress(packageParameters[4], packageParameters[5],
-                            packageParameters[6], packageParameters[7], Integer.parseInt(packageParameters[8]));
-                    packages.add(new Package(packageParameters[0], packageParameters[1],
-                            Double.parseDouble(packageParameters[2]), Double.parseDouble(packageParameters[3]), sa));
+                    try {
+                        packageParameters = str.split(",");
+//                        System.out.println("0: " + packageParameters[0]);
+//                        System.out.println("1: " + packageParameters[1]);
+//                        System.out.println("2: " + packageParameters[2]);
+//                        System.out.println("3: " + packageParameters[3]);
+//                        System.out.println("4: " + packageParameters[4]);
+//                        System.out.println("5: " + packageParameters[5]);
+//                        System.out.println("6: " + packageParameters[6]);
+//                        System.out.println("7: " + packageParameters[7]);
+//                        System.out.println("8: " + packageParameters[8]);
+//                        System.out.println();
+                        ShippingAddress sa = new ShippingAddress(packageParameters[4], packageParameters[5],
+                                packageParameters[6], packageParameters[7], Integer.parseInt(packageParameters[8]));
+                        packages.add(new Package(packageParameters[0], packageParameters[1],
+                                Double.parseDouble(packageParameters[2]), Double.parseDouble(packageParameters[3]), sa));
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("ArrayIndexOutOfBoundsException was caught in the loadPackages method.");
+                    }
                     str = br.readLine();
                 }
                 br.close();
                 fr.close();
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Exception " + e + " was caught");
+                return packages;
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Exception " + e + " was caught");
+                return packages;
             }
             return packages;
         }
@@ -140,7 +158,8 @@ public class DatabaseManager {
                 br.close();
                 fr.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Exception " + e + " was caught");
             }
         }
         return profit;
@@ -163,7 +182,8 @@ public class DatabaseManager {
                 br.close();
                 fr.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Exception " + e + " was caught");
             }
         }
         return packages;
@@ -278,7 +298,7 @@ public class DatabaseManager {
                 zip = packages.get(i).getDestination().getZipCode();
 
                 bw.write(id + "," + productName + "," + weight + "," + price + "," + name + "," +
-                        addressName + "," + "," + city + "," + state + "," + zip);
+                        addressName + "," + city + "," + state + "," + zip);
                 bw.write("\n");
             }
             bw.close();
