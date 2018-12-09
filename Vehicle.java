@@ -19,7 +19,7 @@ public class Vehicle implements Profitable {
      * Default Constructor
      */
 
-    public Vehicle () {
+    public Vehicle() {
         this.licensePlate = "";
         this.maxWeight = 0;
         this.currentWeight = 0;
@@ -35,7 +35,7 @@ public class Vehicle implements Profitable {
      */
 
 
-    public Vehicle (String licensePlate, double maxWeight) {
+    public Vehicle(String licensePlate, double maxWeight) {
         this.licensePlate = licensePlate;
         this.maxWeight = maxWeight;
         this.currentWeight = 0;
@@ -113,7 +113,7 @@ public class Vehicle implements Profitable {
      *
      * @return ArrayList of packages in vehicle
      */
-    public ArrayList <Package> getPackages() {
+    public ArrayList<Package> getPackages() {
         return this.packages;
     }
 
@@ -133,14 +133,12 @@ public class Vehicle implements Profitable {
 //        }
 //        return false;
 //    }
-
-
     public boolean addPackage(Package pkg) {
         if (this.currentWeight + pkg.getWeight() <= maxWeight) {
-           // if (this.currentWeight < this.maxWeight) {
-                packages.add(pkg);
-                return true;
-           // }
+            // if (this.currentWeight < this.maxWeight) {
+            packages.add(pkg);
+            return true;
+            // }
 
         }
         return false;
@@ -169,7 +167,6 @@ public class Vehicle implements Profitable {
 //        }
 //        return false;
 //    }
-
     public boolean isFull() {
         return (this.currentWeight >= this.maxWeight);
     }
@@ -209,8 +206,6 @@ public class Vehicle implements Profitable {
 //            range = range + 1;
 //
 //        }
-
-
     public void fill(ArrayList<Package> warehousePackages) {
 
         int range = 0;
@@ -219,7 +214,7 @@ public class Vehicle implements Profitable {
 
 
         while (!isFull() && number < numberOfPack) {
-            for (int i = 0; i <warehousePackages.size(); i++) {
+            for (int i = 0; i < warehousePackages.size(); i++) {
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
                 if (((difference == range))) {
                     number++;
@@ -244,7 +239,7 @@ public class Vehicle implements Profitable {
         double total = 0.0;
         int maxRange = 0;
 
-        for (int i = 0; i <packages.size() ; i++) {
+        for (int i = 0; i < packages.size(); i++) {
             total = (total + packages.get(i).getPrice());
         }
         return total;
