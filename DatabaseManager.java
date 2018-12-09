@@ -1,3 +1,6 @@
+import java.io.*;
+import java.util.ArrayList;
+
 /**
  * <h1>Database Manager</h1>
  * <p>
@@ -7,9 +10,6 @@
  * @author Yolanda Sung, Haoyi Ding, lab 814
  * @version December 5, 2018
  */
-
-import java.io.*;
-import java.util.ArrayList;
 
 public class DatabaseManager {
 
@@ -94,9 +94,11 @@ public class DatabaseManager {
                     try {
                         packageParameters = str.split(",");
                         ShippingAddress sa = new ShippingAddress(packageParameters[4], packageParameters[5],
-                                packageParameters[6], packageParameters[7], Integer.parseInt(packageParameters[8]));
+                                packageParameters[6], packageParameters[7],
+                                Integer.parseInt(packageParameters[8]));
                         packages.add(new Package(packageParameters[0], packageParameters[1],
-                                Double.parseDouble(packageParameters[2]), Double.parseDouble(packageParameters[3]), sa));
+                                Double.parseDouble(packageParameters[2]),
+                                Double.parseDouble(packageParameters[3]), sa));
                     } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println("ArrayIndexOutOfBoundsException was caught in the loadPackages method.");
                     }

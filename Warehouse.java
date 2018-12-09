@@ -12,17 +12,17 @@ import java.util.Scanner;
  */
 
 public class Warehouse {
-    final static String folderPath = "files/";
+    final static String FOLDERPATH = "files/";
     //final static String folderPath = "";
 
-    final static File VEHICLE_FILE = new File(folderPath + "VehicleList.csv");
-    final static File PACKAGE_FILE = new File(folderPath + "PackageList.csv");
-    final static File PROFIT_FILE = new File(folderPath + "Profit.txt");
-    final static File N_PACKAGES_FILE = new File(folderPath + "NumberOfPackages.txt");
-    final static File PRIME_DAY_FILE = new File(folderPath + "PrimeDay.txt");
+    final static File VEHICLE_FILE = new File(FOLDERPATH + "VehicleList.csv");
+    final static File PACKAGE_FILE = new File(FOLDERPATH + "PackageList.csv");
+    final static File PROFIT_FILE = new File(FOLDERPATH + "Profit.txt");
+    final static File N_PACKAGES_FILE = new File(FOLDERPATH + "NumberOfPackages.txt");
+    final static File PRIME_DAY_FILE = new File(FOLDERPATH + "PrimeDay.txt");
     final static double PRIME_DAY_DISCOUNT = .85;
-    private static ArrayList<Vehicle> vehicles;
-    private static ArrayList<Package> packages;
+    private static ArrayList<Vehicle> vehicle;
+    private static ArrayList<Package> package2;
     private static double profits;
     private static int nPackagesShipped;
     private static boolean primeday;
@@ -41,9 +41,9 @@ public class Warehouse {
 
         //1) load data (vehicle, packages, profits, packages shipped and primeday) from files using DatabaseManager
         System.out.println("Calling loadVehicles method");
-        vehicles = DatabaseManager.loadVehicles(VEHICLE_FILE); // Program fails over here; doesn't print the statement
-        System.out.println("Warehouse class vehicles: " + vehicles.size()); // Checking to make sure load... works
-        packages = DatabaseManager.loadPackages(PACKAGE_FILE);
+        vehicle = DatabaseManager.loadVehicles(VEHICLE_FILE); // Program fails over here; doesn't print the statement
+        System.out.println("Warehouse class vehicles: " + vehicle.size()); // Checking to make sure load... works
+        package2 = DatabaseManager.loadPackages(PACKAGE_FILE);
         profits = DatabaseManager.loadProfit(PROFIT_FILE);
         nPackagesShipped = DatabaseManager.loadPackagesShipped(N_PACKAGES_FILE);
         primeday = DatabaseManager.loadPrimeDay(PRIME_DAY_FILE);
@@ -78,21 +78,21 @@ public class Warehouse {
                     break;
                 case 3:
                     if (primeday) {
-                        for (int i = 0; i < packages.size(); i++) {
-                            packages.get(i).setPrice(packages.get(i).getPrice() * PRIME_DAY_DISCOUNT);
+                        for (int i = 0; i < package2.size(); i++) {
+                            package2.get(i).setPrice(package2.get(i).getPrice() * PRIME_DAY_DISCOUNT);
                         }
                     } else {
-                        for (int i = 0; i < packages.size(); i++) {
-                            packages.get(i).setPrice(packages.get(i).getPrice() / PRIME_DAY_DISCOUNT);
+                        for (int i = 0; i < package2.size(); i++) {
+                            package2.get(i).setPrice(package2.get(i).getPrice() / PRIME_DAY_DISCOUNT);
                         }
                     }
                     primeday = !primeday;
                     break;
                 case 4:
-                    if (vehicles.size() == 0) {
+                    if (vehicle.size() == 0) {
                         System.out.println("Error: No vehicles available.");
                         break;
-                    } else if (packages.size() == 0) {
+                    } else if (package2.size() == 0) {
                         System.out.println("Error: No packages available.");
                         break;
                     } else {
@@ -108,8 +108,8 @@ public class Warehouse {
                         int vehicleIndex = -1;
 
                         if (transportMode == 1) {
-                            for (int i = 0; i < vehicles.size(); i++) {
-                                if (vehicles.get(i) instanceof Truck) {
+                            for (int i = 0; i < vehicle.size(); i++) {
+                                if (vehicle.get(i) instanceof Truck) {
                                     vehicleIndex = i;
                                     vehicleFound = true;
                                     //vehicles.get(i).addPackage(temp);
@@ -121,8 +121,8 @@ public class Warehouse {
                                 System.out.println();
                             }
                         } else if (transportMode == 2) {
-                            for (int i = 0; i < vehicles.size(); i++) {
-                                if (vehicles.get(i) instanceof Drone) {
+                            for (int i = 0; i < vehicle.size(); i++) {
+                                if (vehicle.get(i) instanceof Drone) {
                                     vehicleFound = true;
                                     vehicleIndex = i;
                                     break; //breaks out of for loop
@@ -133,8 +133,8 @@ public class Warehouse {
                                 System.out.println();
                             }
                         } else if (transportMode == 3) {
-                            for (int i = 0; i < vehicles.size(); i++) {
-                                if (vehicles.get(i) instanceof CargoPlane) {
+                            for (int i = 0; i < vehicle.size(); i++) {
+                                if (vehicle.get(i) instanceof CargoPlane) {
                                     vehicleIndex = i;
                                     vehicleFound = true;
                                     break; //breaks out of for loop
@@ -162,24 +162,24 @@ public class Warehouse {
                             int zip = -1;
 
                             if (zipOption == 1) {
-                                zip = packages.get(0).getDestination().getZipCode();
+                                zip = package2.get(0).getDestination().getZipCode();
                             } else if (zipOption == 2) {
-                                zip = zipMode(packages);
+                                zip = zipMode(package2);
                             }
-                            vehicles.get(vehicleIndex).setZipDest(zip);
-                            vehicles.get(vehicleIndex).fill(packages);
+                            vehicle.get(vehicleIndex).setZipDest(zip);
+                            vehicle.get(vehicleIndex).fill(package2);
 
                             System.out.println(id + " has been added.");
-                            System.out.println(vehicles.get(vehicleIndex).report());
+                            System.out.println(vehicle.get(vehicleIndex).report());
 
                             //System.out.println(packages.get(packages.size()-1).shippingLabel());
-                            vehicles.remove(vehicleIndex);
+                            vehicle.remove(vehicleIndex);
                         }
                     }
                     break;
                 case 5:
                     printStatisticsReport(profits, nPackagesShipped,
-                            packages.size());
+                            package2.size());
                     break;
                 case 6:
                     a = false;
@@ -191,8 +191,8 @@ public class Warehouse {
 
         //3) save data (vehicle, packages, profits, packages shipped and primeday)
         // to files (overwriting them) using DatabaseManager
-        DatabaseManager.saveVehicles(VEHICLE_FILE, vehicles);
-        DatabaseManager.savePackages(PACKAGE_FILE, packages);
+        DatabaseManager.saveVehicles(VEHICLE_FILE, vehicle);
+        DatabaseManager.savePackages(PACKAGE_FILE, package2);
         DatabaseManager.saveProfit(PROFIT_FILE, profits);
         DatabaseManager.savePackagesShipped(N_PACKAGES_FILE, nPackagesShipped);
         DatabaseManager.savePrimeDay(PRIME_DAY_FILE, primeday);
@@ -234,7 +234,7 @@ public class Warehouse {
         destination = new ShippingAddress(buyerName, address, city, state, zip);
 
         temp = new Package(id, product, weight, price, destination);
-        packages.add(temp);
+        package2.add(temp);
         nPackagesShipped++;
 
         System.out.println();
@@ -258,11 +258,11 @@ public class Warehouse {
         double maxWeight = console.nextDouble();
 
         if (type == 1) {
-            vehicles.add(new Truck(licensePlate, maxWeight));
+            vehicle.add(new Truck(licensePlate, maxWeight));
         } else if (type == 2) {
-            vehicles.add(new Drone(licensePlate, maxWeight));
+            vehicle.add(new Drone(licensePlate, maxWeight));
         } else if (type == 3) {
-            vehicles.add(new CargoPlane(licensePlate, maxWeight));
+            vehicle.add(new CargoPlane(licensePlate, maxWeight));
         }
     }
 
@@ -292,10 +292,10 @@ public class Warehouse {
         return packages.get(index).getDestination().getZipCode();
     }
 
-    public static void printStatisticsReport(double profits, int packagesShipped, int numberOfPackages) {
+    public static void printStatisticsReport(double profit, int packagesShipped, int numberOfPackages) {
         NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
         System.out.println("==========Statistics==========");
-        System.out.println("Profits: " + nf.format(profits));
+        System.out.println("Profits: " + nf.format(profit));
         //System.out.printf("Packages Shipped: " + "%10d\n", packagesShipped);
         System.out.printf("%s%10d", "Packages Shipped: ", packagesShipped);
         System.out.println();
