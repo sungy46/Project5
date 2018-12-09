@@ -27,46 +27,38 @@ public class DatabaseManager {
      * @return ArrayList of vehicles
      */
     public static ArrayList<Vehicle> loadVehicles(File file) {
-        ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
-        String[] vehicleParameters = new String[3];
-        System.out.println("loadVehicles method is called");
-
+        ArrayList<Vehicle> vehicle = new ArrayList<>();
         if (!file.exists()) {
-            System.out.println("File doesn't exist");
-            return new ArrayList<Vehicle>();
+            return new ArrayList<>();
         } else {
             try {
-                System.out.println("File exists!");
                 FileReader fr = new FileReader(file);
                 BufferedReader br = new BufferedReader(fr);
+                String[] vehicles;
 
-                String str;
-                while ((str = br.readLine()) != null) {
-                    //System.out.println("Vehicles: " + str);
-                    vehicleParameters = str.split(",");
-                    //System.out.println("vehicleParameters length: " + vehicleParameters.length);
+                String str = br.readLine();
+                while (str != null) {
+                    vehicles = str.split(",");
 
-                    if (vehicleParameters[0].equals("Truck")) {
-                        vehicles.add(new Truck(vehicleParameters[1], Double.parseDouble(vehicleParameters[2])));
-
-                    } else if (vehicleParameters[0].equals("Drone")) {
-                        vehicles.add(new Drone(vehicleParameters[1], Double.parseDouble(vehicleParameters[2])));
-                    } else if (vehicleParameters[0].equals("Cargo Plane")) {
-                        vehicles.add(new CargoPlane(vehicleParameters[1], Double.parseDouble(vehicleParameters[2])));
+                    if (vehicles[0].equals("Truck")) {
+                        vehicle.add(new Truck(vehicles[1], Double.parseDouble(vehicles[2])));
+                    } else if (vehicles[0].equals("Cargo Plane")) {
+                        vehicle.add(new CargoPlane(vehicles[1], Double.parseDouble(vehicles[2])));
+                    } else if (vehicles[0].equals("Drone")) {
+                        vehicle.add(new Drone(vehicles[1], Double.parseDouble(vehicles[2])));
                     }
-                    //System.out.println("MaxWeight: " + vehicles.get(vehicles.size() - 1).getMaxWeight());
 
+                    str = br.readLine();
                 }
+
                 br.close();
                 fr.close();
-                //System.out.println(vehicles);
-                return vehicles;
+                return vehicle;
             } catch (IOException e) {
-                return new ArrayList<Vehicle>();
-                //e.printStackTrace();
+                return new ArrayList<>();
             }
-
         }
+
     }
 
 
@@ -94,7 +86,7 @@ public class DatabaseManager {
         ArrayList<Package> packages = new ArrayList<Package>();
         String[] packageParameters;
         if (!file.exists()) {
-            return packages;
+            return new ArrayList<>();
         } else {
             try {
                 FileReader fr = new FileReader(file);
@@ -104,16 +96,6 @@ public class DatabaseManager {
                 while (str != null) {
                     try {
                         packageParameters = str.split(",");
-//                        System.out.println("0: " + packageParameters[0]);
-//                        System.out.println("1: " + packageParameters[1]);
-//                        System.out.println("2: " + packageParameters[2]);
-//                        System.out.println("3: " + packageParameters[3]);
-//                        System.out.println("4: " + packageParameters[4]);
-//                        System.out.println("5: " + packageParameters[5]);
-//                        System.out.println("6: " + packageParameters[6]);
-//                        System.out.println("7: " + packageParameters[7]);
-//                        System.out.println("8: " + packageParameters[8]);
-//                        System.out.println();
                         ShippingAddress sa = new ShippingAddress(packageParameters[4], packageParameters[5],
                                 packageParameters[6], packageParameters[7], Integer.parseInt(packageParameters[8]));
                         packages.add(new Package(packageParameters[0], packageParameters[1],
@@ -128,11 +110,11 @@ public class DatabaseManager {
             } catch (FileNotFoundException e) {
                 //e.printStackTrace();
                 System.out.println("Exception " + e + " was caught");
-                return packages;
+                return new ArrayList<>();
             } catch (IOException e) {
                 //e.printStackTrace();
                 System.out.println("Exception " + e + " was caught");
-                return packages;
+                return new ArrayList<>();
             }
             return packages;
         }

@@ -1,5 +1,7 @@
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -18,8 +20,8 @@ public class Warehouse {
     final static File N_PACKAGES_FILE = new File(folderPath + "NumberOfPackages.txt");
     final static File PRIME_DAY_FILE = new File(folderPath + "PrimeDay.txt");
     final static double PRIME_DAY_DISCOUNT = .85;
-    private static ArrayList<Vehicle> vehicles;
-    private static ArrayList<Package> packages;
+    private static ArrayList<Vehicle> vehicles = new ArrayList<>();
+    private static ArrayList<Package> packages = new ArrayList<>();
     private static double profits;
     private static int nPackagesShipped;
     private static boolean primeday;
@@ -37,7 +39,9 @@ public class Warehouse {
         boolean a = true;
 
         //1) load data (vehicle, packages, profits, packages shipped and primeday) from files using DatabaseManager
-        vehicles = DatabaseManager.loadVehicles(VEHICLE_FILE);
+        System.out.println("Calling loadVehicles method");
+        vehicles = DatabaseManager.loadVehicles(VEHICLE_FILE); // Program fails over here; doesn't print the statement
+        System.out.println("Warehouse class vehicles: " + vehicles.size()); // Checking to make sure load... works
         packages = DatabaseManager.loadPackages(PACKAGE_FILE);
         profits = DatabaseManager.loadProfit(PROFIT_FILE);
         nPackagesShipped = DatabaseManager.loadPackagesShipped(N_PACKAGES_FILE);
@@ -62,6 +66,7 @@ public class Warehouse {
 
             int input = console.nextInt();  //user selected option
             console.nextLine();
+            System.out.println();
 
             switch (input) {
                 case 1:
@@ -71,9 +76,18 @@ public class Warehouse {
                     addVehicle();
                     break;
                 case 3:
+                    if (primeday) {
+                        for (int i = 0; i < packages.size(); i++) {
+                            packages.get(i).setPrice(packages.get(i).getPrice() * PRIME_DAY_DISCOUNT);
+                        }
+                    } else {
+                        for (int i = 0; i < packages.size(); i++) {
+                            packages.get(i).setPrice(packages.get(i).getPrice() / PRIME_DAY_DISCOUNT);
+                        }
+                    }
                     primeday = !primeday;
                     break;
-                case 4: // how do you check if vehicle is full?
+                case 4:
                     if (vehicles.size() == 0) {
                         System.out.println("Error: No vehicles available.");
                         break;
@@ -96,7 +110,6 @@ public class Warehouse {
                             for (int i = 0; i < vehicles.size(); i++) {
                                 if (vehicles.get(i) instanceof Truck) {
                                     vehicleIndex = i;
-                                    //vehicles.remove(i);
                                     vehicleFound = true;
                                     vehicles.get(i).addPackage(temp);
                                     break; //breaks out of for loop
@@ -119,7 +132,6 @@ public class Warehouse {
                         } else if (transportMode == 3) {
                             for (int i = 0; i < vehicles.size(); i++) {
                                 if (vehicles.get(i) instanceof CargoPlane) {
-                                    //vehicles.remove(i);
                                     vehicleIndex = i;
                                     vehicleFound = true;
                                     break; //breaks out of for loop
@@ -129,7 +141,6 @@ public class Warehouse {
                                 System.out.println("Error: No vehicles of selected type are available.");
                             }
                         } else if (transportMode == 4) {
-                            //vehicles.remove(0);
                             vehicleIndex = 0;
                         } else {
                             System.out.println("The option selected is not valid.");
@@ -151,30 +162,27 @@ public class Warehouse {
                                 zip = zipMode(packages);
                             }
                             vehicles.get(vehicleIndex).setZipDest(zip);
-
-                            System.out.println("Packages ArrayList size: " + packages.size());
-
                             vehicles.get(vehicleIndex).fill(packages);
 
                             System.out.println(id + " has been added.");
                             System.out.println(vehicles.get(vehicleIndex).report());
 
-                            System.out.println(packages.get(packages.size()-1).shippingLabel());
-                            //}
+                            //System.out.println(packages.get(packages.size()-1).shippingLabel());
                             vehicles.remove(vehicleIndex);
                         }
                     }
                     break;
-                case 5: // how do you get number of packages in warehouse?
+                case 5:
                     printStatisticsReport(profits, nPackagesShipped,
                             packages.size());
                     break;
                 case 6:
                     a = false;
                     break;
+                default:
+                    System.out.println("Option selected is not valid.");
             }
         }
-
 
         //3) save data (vehicle, packages, profits, packages shipped and primeday)
         // to files (overwriting them) using DatabaseManager
@@ -219,9 +227,7 @@ public class Warehouse {
         console.nextLine();
 
         destination = new ShippingAddress(buyerName, address, city, state, zip);
-        if (primeday) {
-            price *= PRIME_DAY_DISCOUNT;
-        }
+
         temp = new Package(id, product, weight, price, destination);
         packages.add(temp);
         nPackagesShipped++;
@@ -278,17 +284,15 @@ public class Warehouse {
                 index = b;
             }
         }
-
         return packages.get(index).getDestination().getZipCode();
     }
 
     public static void printStatisticsReport(double profits, int packagesShipped, int numberOfPackages) {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
         System.out.println("==========Statistics==========");
-        System.out.printf("Profits: " + "%16.2f\n", profits);
+        System.out.println("Profits: " + nf.format(String.format("%16.2f", profits)));
         System.out.printf("Packages Shipped: " + "%16d\n", packagesShipped);
         System.out.printf("Packages in Warehouse: " + "%16d\n", numberOfPackages);
         System.out.println("==============================");
     }
-
-
 }
