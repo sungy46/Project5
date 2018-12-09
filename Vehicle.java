@@ -13,21 +13,19 @@ public class Vehicle implements Profitable {
     private double currentWeight;
     private int zipDest; //zip code of the destination
     private ArrayList<Package> packages;
-    private int maxRange; //added this field variable
 
 
     /**
      * Default Constructor
      */
 
-    public Vehicle() {
+    public Vehicle () {
         this.licensePlate = "";
         this.maxWeight = 0;
         this.currentWeight = 0;
         this.zipDest = 0;
         packages = new ArrayList<Package>();
     }
-
 
     /**
      * Constructor
@@ -37,10 +35,12 @@ public class Vehicle implements Profitable {
      */
 
 
-    //range of the vehicle...has to do with fill method
-    public Vehicle(String licensePlate, double maxWeight) {
+    public Vehicle (String licensePlate, double maxWeight) {
         this.licensePlate = licensePlate;
         this.maxWeight = maxWeight;
+        this.currentWeight = 0;
+        this.zipDest = 0;
+        this.packages = new ArrayList<>();
     }
 
 
@@ -113,7 +113,7 @@ public class Vehicle implements Profitable {
      *
      * @return ArrayList of packages in vehicle
      */
-    public ArrayList<Package> getPackages() {
+    public ArrayList <Package> getPackages() {
         return this.packages;
     }
 
@@ -125,11 +125,23 @@ public class Vehicle implements Profitable {
      * @param pkg Package to add
      * @return whether or not it was successful in adding the package
      */
+//    public boolean addPackage(Package pkg) {
+//        if (this.currentWeight <= this.maxWeight) {
+//            packages.add(pkg);
+//            this.currentWeight = this.currentWeight + pkg.getWeight();
+//            return true;
+//        }
+//        return false;
+//    }
+
+
     public boolean addPackage(Package pkg) {
-        if (this.currentWeight <= this.maxWeight) {
-            packages.add(pkg);
-            this.currentWeight = this.currentWeight + pkg.getWeight(); //add weight of pkg to current weight
-            return true;
+        if (this.currentWeight + pkg.getWeight() <= maxWeight) {
+           // if (this.currentWeight < this.maxWeight) {
+                packages.add(pkg);
+                return true;
+           // }
+
         }
         return false;
     }
@@ -151,12 +163,17 @@ public class Vehicle implements Profitable {
      * @return whether or not Vehicle is full
      */
 
+//    public boolean isFull() {
+//        if (this.currentWeight >= this.maxWeight) { //equal to because if it's the max weight, you can't put more pkg
+//            return true;
+//        }
+//        return false;
+//    }
+
     public boolean isFull() {
-        if (this.currentWeight >= this.maxWeight) { //equal to because if it's the max weight, you can't put more pkg
-            return true;
-        }
-        return false;
+        return (this.currentWeight >= this.maxWeight);
     }
+
 
     /**
      * Fills vehicle with packages with preference of date added and range of its
@@ -169,44 +186,72 @@ public class Vehicle implements Profitable {
      * @param warehousePackages List of packages to add from
      */
 
+//
+//    public void fill(ArrayList<Package> warehousePackages) {
+//        boolean filling = true;
+//        int range = 0;
+//        int i = 0;
+//       // (!isFull() && warehousePackages.size() != 0)
+//        while (filling) {
+//            for (i = 0; i <warehousePackages.size(); i++) {
+//                int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
+//                //  if (((difference == range))) {
+//
+//                if (addPackage(warehousePackages.get(i)) == false) {
+//                    addPackage(warehousePackages.get(i));
+//                    warehousePackages.remove(i);
+//                 //   maxRange = range;
+//                }
+//            }
+//                i--;
+//            }
+//
+//            range = range + 1;
+//
+//        }
+
 
     public void fill(ArrayList<Package> warehousePackages) {
+
         int range = 0;
-        while (!isFull() && warehousePackages.size() != 0) { //if the vehicle isn't full and if there are still packages in the warehouse
-            for (int i = 0; i < warehousePackages.size(); i++) { //go through the items in the warehouse
+        int number = 0;
+        int numberOfPack = warehousePackages.size();
+
+
+        while (!isFull() && number < numberOfPack) {
+            for (int i = 0; i <warehousePackages.size(); i++) {
                 int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
-                //line above is getting the closest zip code first...comparing the this zip code with the package's zip code
-                if (((difference == range))) { //so the range is 0 at first, so it'll find all the packages with 0 difference/range (closest)
-                    addPackage(warehousePackages.get(i)); //adds the package into the vehicle
-                    //  System.out.println("The package was added"); //Kelly said that we needed this :) Do we though??
-                    warehousePackages.remove(i); //removes the package from the warehouse
-                    maxRange = range; //the max range is the farthest the vehicle delivers
+                if (((difference == range))) {
+                    number++;
+                    if (this.currentWeight + warehousePackages.get(i).getWeight() <= maxWeight) {
+                        addPackage(warehousePackages.get(i));
+                        warehousePackages.remove(i);
+                        this.currentWeight += warehousePackages.get(i).getWeight();
+                        i = i - 1;
+                    }
+
                 }
-                i = i - 1;
+
             }
-
-            range = range + 1; //since it's in an arraylist, you need to do this because the size decreases
-
+            range = range + 1;
         }
     }
 
-    NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
 
     @Override
     public double getProfit() {
         double total = 0.0;
-        for (int i = 0; i < packages.size(); i++) {
-            total = Double.parseDouble(nf.format(total + packages.get(i).getPrice()));
+        int maxRange = 0;
+
+        for (int i = 0; i <packages.size() ; i++) {
+            total = (total + packages.get(i).getPrice());
         }
         return total;
     }
 
     @Override
-    public String report() { //leave it blank because it will be overridden
+    public String report() {
         return "";
     }
 
-    public int getMaxRange() {
-        return this.maxRange;
-    }
 }

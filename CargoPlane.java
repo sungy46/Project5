@@ -14,7 +14,6 @@ public class CargoPlane extends Vehicle {
     private int zipDest;
     private ArrayList <Package> packages = new ArrayList<Package>();
     final double GAS_RATE = 2.33;
-    private int maxRange;
 
     /**
      * Default Constructor
@@ -32,7 +31,6 @@ public class CargoPlane extends Vehicle {
 
     public CargoPlane (String licensePlate, double maxWeight) {
         super (licensePlate, maxWeight);
-        this.currentWeight = 0;
     }
 
 
@@ -64,27 +62,10 @@ public class CargoPlane extends Vehicle {
         this.zipDest = zipDest;
     }
 
-  //  public ArrayList <Package> getPackages() {
-//        return this.packages;
-//    }
-
-
-    public boolean addPackage(Package pkg) {
-        if (this.currentWeight <= this.maxWeight) {
-            packages.add(pkg);
-            this.currentWeight = this.currentWeight + pkg.getWeight(); //add weight of pkg to current weight
-            return true;
-        }
-        return false;
+      public ArrayList <Package> getPackages() {
+        return this.packages;
     }
 
-
-    public boolean isFull() {
-        if (this.currentWeight >= this.maxWeight) { //equal to because if it's the max weight, you can't put more pkg
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Overides its superclass method. Instead, after each iteration, the range will
@@ -92,32 +73,34 @@ public class CargoPlane extends Vehicle {
      *
      * @param warehousePackages List of packages to add from
      */
-    @Override
     public void fill(ArrayList<Package> warehousePackages) {
-        int range = 0;
-        while (!isFull() && warehousePackages.size() != 0) {
-            for (int i = 0; i <warehousePackages.size(); i++) {
-                int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
 
+        int range = 0;
+        int number = 0;
+        int numberOfPack = warehousePackages.size();
+
+
+        while (!isFull() && number < numberOfPack) {
+            for (int i = 0; i < warehousePackages.size(); i++) {
+                int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
                 if (((difference == range))) {
-                    addPackage(warehousePackages.get(i));
-                    warehousePackages.remove(i);
-                    maxRange = range;
-                    i = i - 1;
+                    number++;
+                    if (this.currentWeight + warehousePackages.get(i).getWeight() <= maxWeight) {
+                        addPackage(warehousePackages.get(i));
+                        warehousePackages.remove(i);
+                        this.currentWeight += warehousePackages.get(i).getWeight();
+                        i = i - 1;
+                    }
+
                 }
 
             }
-
-            range = range + 10; //since it's in an arraylist, you need to do this because the size decreases
-
+            range = range + 10;
         }
-        
     }
 
 
-    public int getMaxRange() {
-        return this.maxRange;
-    }
+
 
 
 
@@ -134,13 +117,23 @@ public class CargoPlane extends Vehicle {
     public double getProfit() {
         double profit = 0.0;
         double priceOfPackage = 0.0;
+        int maxRange = 0;
+        int range = 0;
 
-        for (int i = 0; i <packages.size() ; i++) {
+        for (int i = 0; i < packages.size(); i++) {
+            range = Math.abs(getZipDest() - getPackages().get(i).getDestination().getZipCode());
+            if (range > maxRange) {
+                maxRange = range;
+            }
             priceOfPackage = packages.get(i).getPrice();
-            profit = (profit + ((priceOfPackage)- (getMaxRange() * GAS_RATE)));
+            profit += priceOfPackage;
         }
+
+        profit -= (maxRange * GAS_RATE);
+
         return profit;
     }
+
 
     /**
      * Generates a String of the Cargo Plane report. Cargo plane report includes:
@@ -161,10 +154,10 @@ public class CargoPlane extends Vehicle {
         /////cargo plane report
 
         String cargoPlane = "==========CargoPlane Report==========";
-        String license = "License Plate No.: " + super.getLicensePlate();
-        String destination = "Destination: " + getZipDest();
-        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", getCurrentWeight(), super.getMaxWeight());
-        String netProfit = "Net Profit: " + nf.format(getProfit());
+        String license = "License Plate No.: " + this.licensePlate;
+        String destination = "Destination: " + this.zipDest;
+        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", this.currentWeight, this.maxWeight);
+        String netProfit = "Net Profit: " + nf.format(this.getProfit());
         String shippingLabels = "=====Shipping Labels=====";
         String dash = "====================";
 

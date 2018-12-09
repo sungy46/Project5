@@ -15,7 +15,6 @@ public class Truck extends Vehicle {
     private int zipDest;
     private ArrayList<Package> packages = new ArrayList<Package>();
     private final double GAS_RATE = 1.66;
-    private int maxRange;
 
     /**
      * Default Constructor
@@ -34,7 +33,6 @@ public class Truck extends Vehicle {
 
     public Truck(String licensePlate, double maxWeight) {
         super(licensePlate, maxWeight);
-        this.currentWeight = 0;
     }
 
 
@@ -47,7 +45,7 @@ public class Truck extends Vehicle {
     }
 
     public double getMaxWeight() {
-        return super.getMaxWeight();
+        return this.maxWeight;
     }
 
     public void setMaxWeight(double maxWeight) {
@@ -79,62 +77,43 @@ public class Truck extends Vehicle {
 
     NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
 
+//    @Override
+//    public double getProfit() { //check this
+//        double profit = 0.0;
+//        double priceOfPackage = 0.0;
+//
+//
+//        for (int i = 0; i < packages.size(); i++) {
+//            priceOfPackage = packages.get(i).getPrice();
+//            profit += priceOfPackage;
+//        }
+//
+//        profit -= (getMaxRange() * GAS_RATE);
+//
+//        return profit;
+//    }
+
     @Override
-    public double getProfit() { //check this
+    public double getProfit() {
         double profit = 0.0;
         double priceOfPackage = 0.0;
-
+        int maxRange = 0;
+        int range = 0;
 
         for (int i = 0; i < packages.size(); i++) {
+            range = Math.abs(getZipDest() - getPackages().get(i).getDestination().getZipCode());
+            if (range > maxRange) {
+                maxRange = range;
+            }
             priceOfPackage = packages.get(i).getPrice();
             profit += priceOfPackage;
         }
 
-        profit -= (getMaxRange() * GAS_RATE);
+        profit -= (maxRange * GAS_RATE);
 
         return profit;
     }
 
-    public boolean addPackage(Package pkg) {
-        if (this.currentWeight <= this.maxWeight) {
-            packages.add(pkg);
-            this.currentWeight = this.currentWeight + pkg.getWeight(); //add weight of pkg to current weight
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isFull() {
-        if (this.currentWeight >= this.getMaxWeight()) { //equal to because if it's the max weight, you can't put more pkg
-            return true;
-        }
-        return false;
-    }
-
-    public void fill(ArrayList<Package> warehousePackages) {
-        int range = 0;
-        while (!isFull() && warehousePackages.size() != 0) {
-            for (int i = 0; i < warehousePackages.size(); i++) {
-                int difference = Math.abs(this.zipDest - warehousePackages.get(i).getDestination().getZipCode());
-                if (((difference == range))) {
-                    if (currentWeight + warehousePackages.get(i).getWeight() <= maxWeight) {
-                        addPackage(warehousePackages.get(i));
-
-                        warehousePackages.remove(i);
-                        maxRange = range;
-                        i = i - 1;
-                    }
-                }
-            }
-
-            range = range + 1;
-
-        }
-    }
-
-    public int getMaxRange() {
-        return this.maxRange;
-    }
 
     /**
      * Generates a String of the truck report. Truck report includes:
@@ -155,10 +134,10 @@ public class Truck extends Vehicle {
         /////truck report
 
         String truck = "==========Truck Report==========";
-        String license = "License Plate No.: " + super.getLicensePlate();
-        String destination = "Destination: " + getZipDest();
-        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", getCurrentWeight(), super.getMaxWeight());
-        String netProfit = ("Net Profit: " + nf.format(getProfit()));
+        String license = "License Plate No.: " + this.licensePlate;
+        String destination = "Destination: " + this.zipDest;
+        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", this.currentWeight, this.maxWeight);
+        String netProfit = ("Net Profit: " + nf.format(this.getProfit()));
         String shippingLabels = "=====Shipping Labels=====";
         String dash = "====================";
 
