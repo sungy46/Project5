@@ -11,8 +11,8 @@ import java.util.Scanner;
  */
 
 public class Warehouse {
-    final static String folderPath = "files/";
-    //final static String folderPath = "";
+    //final static String folderPath = "files/";
+    final static String folderPath = "";
 
     final static File VEHICLE_FILE = new File(folderPath + "VehicleList.csv");
     final static File PACKAGE_FILE = new File(folderPath + "PackageList.csv");
@@ -111,12 +111,13 @@ public class Warehouse {
                                 if (vehicles.get(i) instanceof Truck) {
                                     vehicleIndex = i;
                                     vehicleFound = true;
-                                    vehicles.get(i).addPackage(temp);
+                                    //vehicles.get(i).addPackage(temp);
                                     break; //breaks out of for loop
                                 }
                             }
                             if (!vehicleFound) {
                                 System.out.println("Error: No vehicles of selected type are available.");
+                                System.out.println();
                             }
                         } else if (transportMode == 2) {
                             for (int i = 0; i < vehicles.size(); i++) {
@@ -128,6 +129,7 @@ public class Warehouse {
                             }
                             if (!vehicleFound) {
                                 System.out.println("Error: No vehicles of selected type are available.");
+                                System.out.println();
                             }
                         } else if (transportMode == 3) {
                             for (int i = 0; i < vehicles.size(); i++) {
@@ -139,11 +141,13 @@ public class Warehouse {
                             }
                             if (!vehicleFound) {
                                 System.out.println("Error: No vehicles of selected type are available.");
+                                System.out.println();
                             }
                         } else if (transportMode == 4) {
                             vehicleIndex = 0;
                         } else {
                             System.out.println("The option selected is not valid.");
+                            System.out.println();
                             break;
                         }
 
@@ -290,9 +294,14 @@ public class Warehouse {
     public static void printStatisticsReport(double profits, int packagesShipped, int numberOfPackages) {
         NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US);
         System.out.println("==========Statistics==========");
-        System.out.println("Profits: " + nf.format(String.format("%16.2f", profits)));
-        System.out.printf("Packages Shipped: " + "%16d\n", packagesShipped);
-        System.out.printf("Packages in Warehouse: " + "%16d\n", numberOfPackages);
+        System.out.println("Profits: " + nf.format(profits));
+        //System.out.printf("Packages Shipped: " + "%10d\n", packagesShipped);
+        System.out.printf("%s%10d", "Packages Shipped: ", packagesShipped);
+        System.out.println();
+        //System.out.printf("Packages in Warehouse: " + "%10d\n", numberOfPackages);
+        System.out.printf("%s%5d", "Packages in Warehouse: ", numberOfPackages);
+        System.out.println();
         System.out.println("==============================");
+        System.out.println();
     }
 }

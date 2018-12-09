@@ -33,6 +33,8 @@ public class Truck extends Vehicle {
 
     public Truck(String licensePlate, double maxWeight) {
         super(licensePlate, maxWeight);
+        this.licensePlate = licensePlate;
+        this.maxWeight = maxWeight;
     }
 
 
@@ -62,10 +64,15 @@ public class Truck extends Vehicle {
 
     public void setZipDest(int zipDest) {
         this.zipDest = zipDest;
+        super.setZipDest(zipDest);
     }
 
     public ArrayList <Package> getPackages() {
         return this.packages;
+    }
+
+    public boolean addPackage(Package a) {
+        return super.addPackage(a);
     }
 
     /**
@@ -100,12 +107,15 @@ public class Truck extends Vehicle {
         int maxRange = 0;
         int range = 0;
 
-        for (int i = 0; i < packages.size(); i++) {
-            range = Math.abs(getZipDest() - getPackages().get(i).getDestination().getZipCode());
+        //for (int i = 0; i < packages.size(); i++) {
+        for (int i = 0; i < super.getPackages().size(); i++) {
+            //range = Math.abs(getZipDest() - getPackages().get(i).getDestination().getZipCode());
+            range = Math.abs(getZipDest() - super.getPackages().get(i).getDestination().getZipCode());
             if (range > maxRange) {
                 maxRange = range;
             }
-            priceOfPackage = packages.get(i).getPrice();
+            //priceOfPackage = packages.get(i).getPrice();
+            priceOfPackage = super.getPackages().get(i).getPrice();
             profit += priceOfPackage;
         }
 
@@ -134,9 +144,11 @@ public class Truck extends Vehicle {
         /////truck report
 
         String truck = "==========Truck Report==========";
-        String license = "License Plate No.: " + this.licensePlate;
+        //String license = "License Plate No.: " + this.licensePlate;
+        String license = "License Plate No.: " + super.getLicensePlate();
         String destination = "Destination: " + this.zipDest;
-        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", this.currentWeight, this.maxWeight);
+//        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", this.currentWeight, this.maxWeight);
+        String weightLoad = String.format("Weight load: %.2f" + "/%.2f", super.getCurrentWeight(), this.maxWeight);
         String netProfit = ("Net Profit: " + nf.format(this.getProfit()));
         String shippingLabels = "=====Shipping Labels=====";
         String dash = "====================";
@@ -144,8 +156,9 @@ public class Truck extends Vehicle {
 
         ///////shipping labels
 
-        for (int i = 0; i < packages.size(); i++) {
-            endResult += "\n" + packages.get(i).shippingLabel();
+        //for (int i = 0; i < packages.size(); i++) {
+        for (int i = 0; i < super.getPackages().size(); i++) {
+            endResult += "\n" + super.getPackages().get(i).shippingLabel();
         }
 
         return truck + "\n" + license + "\n" + destination + "\n" + weightLoad + "\n" + netProfit
