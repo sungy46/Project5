@@ -225,8 +225,9 @@ public class Vehicle implements Profitable {
                     number++;
                     if (this.currentWeight + warehousePackages.get(i).getWeight() <= maxWeight) {
                         addPackage(warehousePackages.get(i));
-                        warehousePackages.remove(i);
                         this.currentWeight += warehousePackages.get(i).getWeight();
+                        warehousePackages.remove(i);
+
                         i = i - 1;
                     }
 
