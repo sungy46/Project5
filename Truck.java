@@ -67,7 +67,7 @@ public class Truck extends Vehicle {
         super.setZipDest(zipDest);
     }
 
-    public ArrayList <Package> getPackages() {
+    public ArrayList<Package> getPackages() {
         return this.packages;
     }
 

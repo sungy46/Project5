@@ -6,13 +6,14 @@ import java.util.Scanner;
 
 /**
  * <h1>Warehouse</h1>
+ *
  * @author Yolanda Sung, Haoyi Ding, lab 814
  * @version December 5, 2018
  */
 
 public class Warehouse {
-    //final static String folderPath = "files/";
-    final static String folderPath = "";
+    final static String folderPath = "files/";
+    //final static String folderPath = "";
 
     final static File VEHICLE_FILE = new File(folderPath + "VehicleList.csv");
     final static File PACKAGE_FILE = new File(folderPath + "PackageList.csv");
@@ -20,8 +21,8 @@ public class Warehouse {
     final static File N_PACKAGES_FILE = new File(folderPath + "NumberOfPackages.txt");
     final static File PRIME_DAY_FILE = new File(folderPath + "PrimeDay.txt");
     final static double PRIME_DAY_DISCOUNT = .85;
-    private static ArrayList<Vehicle> vehicles = new ArrayList<>();
-    private static ArrayList<Package> packages = new ArrayList<>();
+    private static ArrayList<Vehicle> vehicles;
+    private static ArrayList<Package> packages;
     private static double profits;
     private static int nPackagesShipped;
     private static boolean primeday;

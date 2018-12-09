@@ -28,35 +28,32 @@ public class DatabaseManager {
      */
     public static ArrayList<Vehicle> loadVehicles(File file) {
         ArrayList<Vehicle> vehicle = new ArrayList<>();
-        if (!file.exists()) {
-            return new ArrayList<>();
-        } else {
-            try {
-                FileReader fr = new FileReader(file);
-                BufferedReader br = new BufferedReader(fr);
-                String[] vehicles;
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            String[] vehicles;
 
-                String str = br.readLine();
-                while (str != null) {
-                    vehicles = str.split(",");
+            String str = br.readLine();
+            while (str != null) {
+                vehicles = str.split(",");
 
-                    if (vehicles[0].equals("Truck")) {
-                        vehicle.add(new Truck(vehicles[1], Double.parseDouble(vehicles[2])));
-                    } else if (vehicles[0].equals("Cargo Plane")) {
-                        vehicle.add(new CargoPlane(vehicles[1], Double.parseDouble(vehicles[2])));
-                    } else if (vehicles[0].equals("Drone")) {
-                        vehicle.add(new Drone(vehicles[1], Double.parseDouble(vehicles[2])));
-                    }
-
-                    str = br.readLine();
+                if (vehicles[0].equals("Truck")) {
+                    vehicle.add(new Truck(vehicles[1], Double.parseDouble(vehicles[2])));
+                } else if (vehicles[0].equals("Cargo Plane")) {
+                    vehicle.add(new CargoPlane(vehicles[1], Double.parseDouble(vehicles[2])));
+                } else if (vehicles[0].equals("Drone")) {
+                    vehicle.add(new Drone(vehicles[1], Double.parseDouble(vehicles[2])));
                 }
 
-                br.close();
-                fr.close();
-                return vehicle;
-            } catch (IOException e) {
-                return new ArrayList<>();
+                str = br.readLine();
             }
+
+            br.close();
+            fr.close();
+            return vehicle;
+        } catch (IOException e) {
+            System.out.println("hi");
+            return vehicle;
         }
 
     }
@@ -86,7 +83,7 @@ public class DatabaseManager {
         ArrayList<Package> packages = new ArrayList<Package>();
         String[] packageParameters;
         if (!file.exists()) {
-            return new ArrayList<>();
+            return packages;
         } else {
             try {
                 FileReader fr = new FileReader(file);
@@ -110,11 +107,11 @@ public class DatabaseManager {
             } catch (FileNotFoundException e) {
                 //e.printStackTrace();
                 System.out.println("Exception " + e + " was caught");
-                return new ArrayList<>();
+                return packages;
             } catch (IOException e) {
                 //e.printStackTrace();
                 System.out.println("Exception " + e + " was caught");
-                return new ArrayList<>();
+                return packages;
             }
             return packages;
         }
