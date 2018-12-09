@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * <p>
  *
  * @author Yolanda Sung, Haoyi Ding, lab 814
- * @version December 5, 2018
+ * @version December 9, 2018
  */
 
 public class DatabaseManager {
@@ -44,7 +44,6 @@ public class DatabaseManager {
                 } else if (vehicles[0].equals("Drone")) {
                     vehicle.add(new Drone(vehicles[1], Double.parseDouble(vehicles[2])));
                 }
-
                 str = br.readLine();
             }
 
@@ -52,8 +51,7 @@ public class DatabaseManager {
             fr.close();
             return vehicle;
         } catch (IOException e) {
-            System.out.println("hi");
-            return vehicle;
+            return new ArrayList<>();
         }
 
     }

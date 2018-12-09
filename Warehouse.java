@@ -8,7 +8,7 @@ import java.util.Scanner;
  * <h1>Warehouse</h1>
  *
  * @author Yolanda Sung, Haoyi Ding, lab 814
- * @version December 5, 2018
+ * @version December 9, 2018
  */
 
 public class Warehouse {
@@ -21,7 +21,7 @@ public class Warehouse {
     final static File N_PACKAGES_FILE = new File(FOLDERPATH + "NumberOfPackages.txt");
     final static File PRIME_DAY_FILE = new File(FOLDERPATH + "PrimeDay.txt");
     final static double PRIME_DAY_DISCOUNT = .85;
-    private static ArrayList<Vehicle> vehicle;
+    private static ArrayList<Vehicle> vehicle = new ArrayList<>();
     private static ArrayList<Package> package2;
     private static double profits;
     private static int nPackagesShipped;

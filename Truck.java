@@ -5,6 +5,11 @@ import java.util.Locale;
 
 /**
  * <h1>Truck</h1> Represents a Truck
+ *  <p>
+ *  Used to locally save and retrieve data.
+ *  <p>
+ *  @author Yolanda Sung, Haoyi Ding, lab 814
+ *  @version December 9, 2018
  */
 
 public class Truck extends Vehicle {
@@ -14,7 +19,7 @@ public class Truck extends Vehicle {
     private double currentWeight;
     private int zipDest;
     private ArrayList<Package> packages = new ArrayList<Package>();
-    private final double GAS_RATE = 1.66;
+    private static final double GAS_RATE = 1.66;
 
     /**
      * Default Constructor
